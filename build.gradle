@@ -1,0 +1,57 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['test/junit']
+        }
+    }
+    jcstress {
+        java {
+            srcDirs = ['test/jcstress']
+        }
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+configurations {
+    jcstressImplementation.extendsFrom implementation
+    jcstressAnnotationProcessor.extendsFrom annotationProcessor
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+
+    jcstressImplementation 'org.openjdk.jcstress:jcstress-core:0.16'
+    jcstressAnnotationProcessor 'org.openjdk.jcstress:jcstress-core:0.16'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.register('jcstress', JavaExec) {
+    group = 'verification'
+    description = 'Runs OpenJDK JCStress tests.'
+    dependsOn tasks.named('jcstressClasses')
+    mainClass = 'org.openjdk.jcstress.Main'
+    classpath = sourceSets.jcstress.runtimeClasspath
+    args = ['-f', '1', '-m', 'quick', '-iters', '3']
+}

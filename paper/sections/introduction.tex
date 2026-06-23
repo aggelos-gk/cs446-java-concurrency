@@ -1,0 +1,13 @@
+\section{Introduction}
+When multiple threads access shared resources concurrently, their operations must be coordinated to ensure correct and predictable behavior. In Java, synchronization constructs such as the synchronized keyword, locks, volatile variables, and atomic classes provide mechanisms for coordinating concurrent access. However, the core challenge of concurrent programming is not the use of these mechanisms themselves, but the correct management of shared mutable data. Consequently, understanding how state is shared and modified among threads is essential for designing reliable and maintainable concurrent systems.
+
+In this context, the state of an object refers to the data that determines its behavior, typically stored in instance or static variables. When such state is shared among multiple threads and can be modified during execution, concurrent access must be carefully coordinated to prevent inconsistent results, race conditions, and data corruption. For example, when one thread updates a shared variable while another thread simultaneously reads or modifies the same variable, the absence of proper synchronization may lead to inconsistent observations, lost updates, or unpredictable program behavior.
+
+
+
+\paperfigure{figure1.png}{Visibility problem caused by unsynchronized access to a shared variable.}
+
+\paperfigure{figure2.png}{Race condition caused by concurrent updates to a shared variable.}
+
+For example, in Figure 1, two threads access the same shared variable (running). While Thread B updates the variable by invoking stop(), Thread A continuously reads its value within the run() method. Without proper synchronization, the update performed by Thread B may not become immediately visible to Thread A, causing the loop to continue executing even after the variable has been modified. Similarly, Figure 2 a race condition involving concurrent modifications of a shared variable. Both Thread A and Thread B invoke the increment() method, which performs a read-modify-write operation on the count variable. Since this operation is not atomic, concurrent execution may result in one update overwriting another, leading to an incorrect final value.
+

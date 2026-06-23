@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ConcurrentQueueRandomizedDifferentialTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-06-23T14:43:16" hostname="DESKTOP-B3BT2KB" time="0.175">
+  <properties/>
+  <testcase name="lcrq randomized API behavior matches ConcurrentLinkedQueue" classname="ConcurrentQueueRandomizedDifferentialTest" time="0.104"/>
+  <testcase name="msqueue randomized API behavior matches ConcurrentLinkedQueue" classname="ConcurrentQueueRandomizedDifferentialTest" time="0.064"/>
+  <testcase name="lcrq randomized null exceptions match ConcurrentLinkedQueue" classname="ConcurrentQueueRandomizedDifferentialTest" time="0.002"/>
+  <testcase name="msqueue randomized null exceptions match ConcurrentLinkedQueue" classname="ConcurrentQueueRandomizedDifferentialTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

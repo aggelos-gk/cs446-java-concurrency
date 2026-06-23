@@ -1,0 +1,4 @@
+\section{Lock-Free Data Structures}
+Lock-free data structures use atomic primitives to update shared state without requiring a thread to hold a mutex. Their main advantage is that system-wide progress can continue even if one thread is delayed.
+
+This section should cover compare-and-swap loops, contention, retry behavior, the ABA problem, memory reclamation concerns, and why queues are a common case study for lock-free design.

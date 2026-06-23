@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ConcurrentQueueConcurrentStressTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-06-23T14:43:15" hostname="DESKTOP-B3BT2KB" time="0.738">
+  <properties/>
+  <testcase name="lcrq concurrent API stress with 1 threads" classname="ConcurrentQueueConcurrentStressTest" time="0.059"/>
+  <testcase name="lcrq concurrent API stress with 4 threads" classname="ConcurrentQueueConcurrentStressTest" time="0.038"/>
+  <testcase name="lcrq concurrent API stress with 8 threads" classname="ConcurrentQueueConcurrentStressTest" time="0.048"/>
+  <testcase name="lcrq concurrent API stress with 16 threads" classname="ConcurrentQueueConcurrentStressTest" time="0.061"/>
+  <testcase name="lcrq concurrent API stress with 32 threads" classname="ConcurrentQueueConcurrentStressTest" time="0.089"/>
+  <testcase name="msqueue concurrent API stress with 1 threads" classname="ConcurrentQueueConcurrentStressTest" time="0.008"/>
+  <testcase name="msqueue concurrent API stress with 4 threads" classname="ConcurrentQueueConcurrentStressTest" time="0.017"/>
+  <testcase name="msqueue concurrent API stress with 8 threads" classname="ConcurrentQueueConcurrentStressTest" time="0.033"/>
+  <testcase name="msqueue concurrent API stress with 16 threads" classname="ConcurrentQueueConcurrentStressTest" time="0.053"/>
+  <testcase name="msqueue concurrent API stress with 32 threads" classname="ConcurrentQueueConcurrentStressTest" time="0.108"/>
+  <testcase name="official concurrent API stress with 1 threads" classname="ConcurrentQueueConcurrentStressTest" time="0.01"/>
+  <testcase name="official concurrent API stress with 4 threads" classname="ConcurrentQueueConcurrentStressTest" time="0.048"/>
+  <testcase name="official concurrent API stress with 8 threads" classname="ConcurrentQueueConcurrentStressTest" time="0.022"/>
+  <testcase name="official concurrent API stress with 16 threads" classname="ConcurrentQueueConcurrentStressTest" time="0.045"/>
+  <testcase name="official concurrent API stress with 32 threads" classname="ConcurrentQueueConcurrentStressTest" time="0.077"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

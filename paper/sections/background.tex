@@ -1,0 +1,177 @@
+\section{Background}
+Concurrency refers to the ability of a system to manage multiple tasks whose executions overlap in time. In multithreaded applications, multiple threads may access and modify shared data concurrently, introducing challenges related to correctness, visibility, atomicity, ordering, and synchronization. As a result, concurrent programming requires mechanisms that ensure predictable behavior when shared state is accessed by multiple execution contexts.
+
+This section introduces the main concepts needed to discuss concurrent programming in Java. Visibility and atomicity are basic concepts that describe how shared state can be observed and updated by multiple threads. Thread safety is discussed in terms of correctness, since a thread-safe class or data structure must preserve its expected behavior under concurrent access. The section also gives a general overview of the Java Memory Model (JMM), synchronization mechanisms such as \texttt{volatile}, atomic operations, compare-and-swap (CAS), and VarHandles, and the background needed for the later analysis of the JDK concurrent queue and deque implementations.
+
+\subsection{Visibility}
+
+Visibility describes whether a change made by one thread can be observed by another thread. In a concurrent program, multiple threads may access the same shared variable. However, a value written by one thread is not guaranteed to become immediately visible to other threads unless proper synchronization is used. \cite{java-concurrency}
+
+This behavior is possible because modern processors, caches, compilers, and the JVM perform various optimizations to improve performance. As a result, different threads may temporarily observe different values for the same variable. \cite{java-concurrency}
+
+Visibility issues can lead to unexpected behavior. For example, one thread may update a shared flag indicating that a task should stop, while another thread continues to observe the old value and keeps executing. To ensure that updates performed by one thread become visible to others, synchronization mechanisms such as \texttt{volatile} variables, locks, or atomic operations must be used. \cite{java-concurrency}
+
+\paperfigure{figure1.png}{Visibility problem caused by unsynchronized access to a shared variable.}
+
+The visibility problem is illustrated in Figure 1. Thread B updates the shared variable \texttt{running} by invoking \texttt{stop()}, while Thread A continuously checks the same variable inside the \texttt{run()} method. Without proper synchronization, the update may not become visible to Thread A, causing the loop to continue executing even though the value has already been changed.
+
+\subsection{Atomicity}
+Atomicity describes whether an operation is executed as a single indivisible action. In concurrent programs, this property is important because multiple threads may attempt to access and modify the same shared data simultaneously. If an operation is not atomic, another thread may observe or modify the data while the operation is still in progress, leading to incorrect results. \cite{java-concurrency}
+
+Many operations that appear to be a single statement in the source code are actually performed as a sequence of smaller steps. A common example is incrementing a shared counter using the expression \texttt{count++}. Although it appears to be a single operation, it is internally executed as three separate actions: reading the current value, incrementing it, and writing the updated value back to memory. This type of operation is commonly referred to as a read-modify-write operation.
+
+When multiple threads perform a read-modify-write operation concurrently, their executions may interleave. As a result, one thread can overwrite the update performed by another thread, causing an increment to be lost. This phenomenon is known as a lost update and represents one of the most common forms of atomicity violation in concurrent programs.
+
+Synchronization mechanisms such as locks, atomic variables, and compare-and-set (CAS) operations are commonly used to ensure that read-modify-write operations are executed atomically and produce correct results under concurrent access.
+
+\paperfigure{figure2.png}{Lost update caused by a non-atomic increment operation.}
+
+Figure 2 illustrates a lost update caused by concurrent execution of a read-modify-write operation. Both threads may read the same value of \texttt{count} before either of them writes the updated result back to memory. For example, if both threads read the value 5, each thread will independently calculate the new value 6. The first thread writes 6 back to memory, but the second thread subsequently writes its own result, which is also 6. As a result, one increment is effectively lost and the final value becomes 6 instead of 7.
+
+\subsection{Thread Safety}
+Thread safety is a fundamental requirement in concurrent systems, yet defining it precisely is not always straightforward. At its core, thread safety is closely related to the concept of correctness. A class is considered correct when it behaves according to its specification and preserves its expected invariants and operational guarantees. \cite{java-concurrency}
+
+Based on this notion of correctness, a class is considered thread-safe if it continues to behave correctly when accessed concurrently by multiple threads. In other words, the correctness of the class must be preserved regardless of the scheduling or interleaving of thread execution, without requiring additional synchronization by the calling code. Thread-safe classes therefore prevent concurrency-related issues such as race conditions, visibility problems, and data corruption, ensuring predictable and reliable behavior under concurrent access. \cite{java-concurrency}
+
+\subsection{Java Memory Model}
+The Java Memory Model defines the rules that govern how threads interact through memory. It specifies when writes performed by one thread must become visible to another thread and which ordering guarantees are provided by synchronization actions. These rules are necessary because compilers, processors, and runtime systems may optimize program execution in ways that are not obvious from the source code. \cite{java-concurrency}\cite{jsr133-faq}
+
+The JMM does not require every operation to be immediately visible to every thread. Instead, it defines precise guarantees for correctly synchronized programs. Constructs such as \texttt{synchronized}, \texttt{volatile}, thread start and termination, and atomic classes create ordering and visibility relationships that allow programmers to reason about shared-memory behavior. \cite{java-concurrency}\cite{jsr133-faq}
+
+\subsubsection{Reordering}
+Reordering refers to the execution of memory operations in an order different from the one in which they appear in the source code. Modern compilers, the JVM, and processors perform such optimizations to improve performance, provided that the behavior of a single thread remains unchanged. \cite{java-concurrency}\cite{jsr133-faq}
+
+In single-threaded programs, reordering is usually invisible to the programmer because the final result remains the same. In concurrent programs, however, multiple threads may observe memory operations in a different order than expected. As a result, one thread may observe the effects of a later operation while still not observing the effects of an earlier one. \cite{java-concurrency}\cite{jsr133-faq}
+
+This behavior can lead to unexpected results when shared variables are accessed without proper synchronization. For this reason, reasoning about the execution order of operations in concurrent programs is often difficult. Synchronization mechanisms restrict certain reorderings and ensure that memory operations are observed in a predictable manner by other threads. \cite{java-concurrency}\cite{jsr133-faq}
+
+\paperfigure{figure3.png}{Example illustrating the effects of memory reordering.}
+
+Figure 3 demonstrates a simple reordering scenario. A programmer might expect that if a thread observes \texttt{y = 2}, it must also observe \texttt{x = 1}, since the assignment to \texttt{x} appears before the assignment to \texttt{y} in the source code. However, due to reordering and visibility effects, another thread may observe the updated value of \texttt{y} while still observing the old value of \texttt{x}. As a result, \texttt{r1} may become 2 while \texttt{r2} remains 0.
+
+\subsubsection{Happens-before Relationship}
+The Java Memory Model defines a relationship known as happens-before, which specifies when the actions performed by one thread become visible to another thread. In simple terms, if an action A happens-before an action B, then the thread executing B is guaranteed to observe the effects of A. \cite{java-concurrency}
+
+The happens-before relationship is the mechanism used by the JMM to provide visibility and ordering guarantees between threads. Without such a relationship, the JVM, compiler, and processor are free to reorder memory operations, making it difficult to reason about the behavior of concurrent programs. \cite{java-concurrency}
+
+Several synchronization mechanisms establish happens-before relationships, including locks, \texttt{volatile} variables, thread start and termination operations, and atomic variables. These guarantees allow threads to communicate safely through shared memory and ensure that updates performed by one thread become visible to others in a predictable manner. \cite{java-concurrency}
+
+\paperfigure{figure4.png}{Happens-before relationship between two synchronized threads.}
+
+Figure 4 illustrates a happens-before relationship established through synchronization. Thread A updates the shared variable \texttt{x} and subsequently releases lock \texttt{M}. When Thread B later acquires the same lock, it is guaranteed to observe all memory updates performed by Thread A before the lock was released. As a result, the value written to \texttt{x} becomes visible to Thread B. \cite{java-concurrency}
+
+\subsection{Synchronization Mechanisms}
+Synchronization mechanisms are the tools used to coordinate access to shared state between threads. In this work, the focus is on mechanisms that are commonly used in lock-free algorithms, because the later sections examine lock-free queue implementations. These mechanisms include \texttt{volatile} variables, atomic operations, compare-and-set (CAS) loops, and \texttt{VarHandle} operations, which provide the visibility, ordering, and atomicity guarantees needed to update shared references without using locks.
+
+These mechanisms are important for understanding lock-free concurrent queues because they determine how updates to shared nodes, \texttt{head} pointers, \texttt{tail} pointers, and \texttt{next} links become safe under concurrent access. Queue implementations in the JDK rely on these guarantees to avoid data corruption while allowing multiple threads to operate on the same queue without blocking each other through a global lock.
+
+\subsubsection{Volatile Variables}
+The Java language provides the \texttt{volatile} keyword as a lightweight synchronization mechanism for shared variables. A variable can be declared as \texttt{volatile} by placing the \texttt{volatile} modifier before its type. \cite{java-concurrency}
+
+When a variable is declared as \texttt{volatile}, any value written by one thread becomes visible to other threads that subsequently read the same variable. In addition, the JVM is not allowed to reorder memory operations around \texttt{volatile} accesses in ways that would violate the visibility guarantees defined by the Java Memory Model. \cite{java-concurrency}
+
+\texttt{volatile} variables are commonly used for status flags, configuration values, or lifecycle events that may be updated by one thread and observed by others. A typical example is a shared flag used to signal that a thread should stop executing. Without the \texttt{volatile} modifier, one thread may continue observing an outdated value even after another thread has updated it. \cite{java-concurrency}
+
+Although \texttt{volatile} variables provide visibility guarantees, they do not provide atomicity. Operations such as \texttt{count++} are still executed as read-modify-write operations and may suffer from race conditions when accessed concurrently. For this reason, \texttt{volatile} variables are generally used when threads only need to observe the most recent value of a variable and no compound update operations are required. \cite{java-concurrency}
+
+Compared to locks, \texttt{volatile} variables are simpler and typically incur lower overhead. However, locks provide both visibility and atomicity guarantees, whereas \texttt{volatile} variables only guarantee visibility. \cite{java-concurrency}
+
+\subsubsection{Compare-and-set (CAS)}
+Compare-And-Set (CAS) is an atomic operation commonly used in lock-free concurrent data structures. The operation receives two values: an expected value and a new value. If the current value stored in memory matches the expected value, it is replaced with the new value. Otherwise, the operation fails and no modification is performed. \cite{art-multiprocessor}
+
+The importance of CAS lies in the fact that the comparison and the update are executed as a single atomic action. As a result, no other thread can modify the value between the comparison and the update. This property allows multiple threads to coordinate access to shared data without using locks. \cite{art-multiprocessor}
+
+CAS is widely used in modern concurrent algorithms because it provides atomicity while avoiding the overhead associated with locking mechanisms. Many concurrent data structures in the Java platform, including lock-free queues, rely on CAS operations to safely update shared references and state variables. \cite{art-multiprocessor}
+
+In Java, CAS operations are exposed through classes such as \texttt{AtomicInteger}, \texttt{AtomicReference}, and \texttt{VarHandle}, which internally rely on hardware-supported atomic instructions provided by the underlying processor architecture. \cite{art-multiprocessor}
+
+\paperfigure{figure5.png}{Concurrent Compare-And-Set (CAS) operations on a shared variable.}
+
+Figure 5 illustrates two threads attempting to update the same shared variable using a CAS operation. Both threads expect the current value of \texttt{count} to be 5 and attempt to update it to 6. Only one thread can succeed because the comparison and update are performed atomically. If Thread A updates the value first, the value of \texttt{count} becomes 6. When Thread B subsequently executes its CAS operation, the comparison fails because the current value no longer matches the expected value. Instead of overwriting the update performed by Thread A, the operation returns \texttt{false}, allowing Thread B to detect the conflict and retry if necessary.
+
+
+\subsubsection{VarHandles}
+\texttt{VarHandle}s were introduced in Java 9 as a standard way of performing low-level memory operations on variables. Before their introduction, most lock-free algorithms relied either on atomic classes such as \texttt{AtomicInteger} or on the internal \texttt{Unsafe} API. \texttt{VarHandle}s provide similar functionality through an official Java API. \cite{jep193-varhandles}
+
+A useful way to think about a \texttt{VarHandle} is as a special object that "points" to a specific field of a class. Once created, it can be used to read, write, or atomically update that field. This is particularly useful in concurrent data structures, where multiple threads may need to safely modify the same shared reference. \cite{jep193-varhandles}
+
+Unlike atomic classes such as \texttt{AtomicInteger} or \texttt{AtomicReference}, a \texttt{VarHandle} does not store any data itself. Instead, it operates directly on an existing field of an object. In practice, this means that a \texttt{VarHandle} can be attached to fields such as \texttt{next}, \texttt{head}, or \texttt{tail} and perform atomic operations on them whenever needed. \cite{jep193-varhandles}
+
+\paperfigure{figure6.png}{Concurrent Compare-And-Set (CAS) operations on a shared variable.}
+
+\paperfigure{figure7.png}{Concurrent Compare-And-Set (CAS) operations on a shared variable.}
+
+Figure 6 shows a \texttt{VarHandle} associated with the \texttt{next} field of a node. Once created, the handle can be used to read, write, or atomically update the field without requiring additional wrapper objects such as \texttt{AtomicReference}.
+
+Figure 7 illustrates two threads attempting to update the same reference. Both threads expect the value of \texttt{next} to be null. Thread A succeeds first and updates the field to \texttt{nodeA}. When Thread B performs the same operation, the expected value no longer matches the current value, causing the CAS operation to fail. Instead of overwriting the existing update, Thread B can retry using the latest state of the data structure.
+
+\subsection{Michael-Scott Concurrent Queue}
+The Michael-Scott Queue is one of the most well-known lock-free queue algorithms and has influenced many modern concurrent queue implementations, such as Java's \texttt{ConcurrentLinkedQueue}. The algorithm implements a FIFO queue using a singly-linked list and relies on atomic Compare-And-Swap (CAS) operations instead of locks to coordinate concurrent updates.
+
+The queue maintains two shared references, \texttt{Head} and \texttt{Tail}, as well as a special dummy node that is created during initialization. The dummy node does not contain user data and is used to simplify the implementation by avoiding special cases when the queue is empty or contains only a single element. \cite{michael-scott-queue}
+
+\paperfigure{figure8.png}{Initial state of a Michael-Scott Queue.}
+
+New elements are inserted at the end of the linked list. To perform an insertion, a thread first creates a new node and then attempts to atomically attach it to the current tail using a CAS operation. If another thread modifies the queue first, the CAS operation fails and the thread retries using the updated state of the queue. Once the new node has been successfully linked, the \texttt{Tail} pointer is advanced to the newly inserted node. \cite{michael-scott-queue}
+
+\paperfigure{figure9.png}{Michael-Scott Queue after inserting two elements.}
+
+Elements are removed from the beginning of the queue. Since \texttt{Head} always points to the dummy node, the first real element is located at \texttt{head.next}. A dequeue operation removes an element by atomically advancing the \texttt{Head} pointer to the next node in the list. The removed node effectively becomes the new dummy node. \cite{michael-scott-queue}
+
+One interesting aspect of the algorithm is that threads may help each other complete operations. For example, if a thread inserts a node but is interrupted before updating the \texttt{Tail} pointer, another thread can detect that the pointer is outdated and advance it on behalf of the original thread. This helping mechanism improves overall progress and is one of the key reasons the algorithm remains lock-free. \cite{michael-scott-queue}
+
+The algorithm does not use locks, mutexes, or \texttt{synchronized} blocks. Instead, it relies entirely on CAS operations. When a CAS operation fails, it usually means that another thread has successfully completed an update. As a result, even though an individual thread may need to retry, the system as a whole continues making progress. This property makes the Michael-Scott Queue a lock-free data structure and allows it to scale efficiently under concurrent workloads. \cite{michael-scott-queue}
+
+
+\subsection{Linked Concurrent Ring Queue}
+The Linked Concurrent Ring Queue (LCRQ) was proposed as an evolution of the Michael-Scott Queue with the goal of improving scalability under high contention. While the Michael-Scott Queue relies on a linked list of nodes and CAS operations on shared pointers, the LCRQ combines the Michael-Scott design with concurrent ring buffers and Fetch-And-Add (FAA) operations. The main idea is to reduce contention by spreading concurrent operations across many positions in a ring instead of forcing all threads to compete for the same memory locations.
+
+At a high level, an LCRQ can be viewed as a Michael-Scott Queue where each node of the linked list is replaced by a Concurrent Ring Queue (CRQ). Instead of storing individual elements inside linked-list nodes, each CRQ stores many elements inside a circular array. \cite{lcrq}
+
+\textbf{Here put a figure: conceptual relationship between the Michael-Scott Queue and the LCRQ.}
+
+This design significantly reduces contention because threads are distributed across many slots of a ring buffer rather than repeatedly updating the same shared pointers. \cite{lcrq}
+
+A key component of the algorithm is the Fetch-And-Add (FAA) operation. Unlike CAS, which may fail when multiple threads attempt to update the same value concurrently, FAA always succeeds and returns a unique position to each thread. \cite{lcrq}
+
+For example, assume the \texttt{tail} counter initially contains \texttt{tail = 5} and three threads execute \texttt{index = FAA(tail, 1)}. The result is that Thread A receives position \texttt{5}, Thread B receives position \texttt{6}, Thread C receives position \texttt{7}, and \texttt{tail} becomes \texttt{8}. \cite{lcrq}
+
+\textbf{Here put a figure: ticket allocation using Fetch-And-Add.}
+
+A useful way to think about FAA is as taking a queue ticket. Every thread receives a unique number and can immediately proceed to its assigned position without competing with the others. \cite{lcrq}
+
+This is one of the main reasons why LCRQ scales better under contention. In a traditional CAS loop, many threads may repeatedly fail and retry while attempting to update the same shared variable. With FAA, every thread obtains a unique position on the first attempt. \cite{lcrq}
+
+Each CRQ consists of a circular array of slots. Each slot stores metadata in addition to the actual value. Most importantly, every slot maintains an index (\texttt{idx}) which identifies the logical position associated with that slot. \cite{lcrq}
+
+\textbf{Here put a figure: ring buffer slots used by a Concurrent Ring Queue.}
+
+This is necessary because the ring buffer is reused continuously. For example, if the ring contains eight positions, then indices \texttt{2} and \texttt{10} both map to the same physical slot, because \texttt{2 \% 8 = 2} and \texttt{10 \% 8 = 2}. \cite{lcrq}
+
+Without additional information, the algorithm would not be able to distinguish whether a slot corresponds to an old operation or a new one. The stored index allows threads to determine exactly which logical position a slot currently represents. \cite{lcrq}
+
+To insert an element, a thread first reserves a position using \texttt{ticket = FAA(tail, 1)}. It then computes the corresponding slot using \texttt{slot = ticket \% R}, where \texttt{R} is the ring size. \cite{lcrq}
+
+For example, if \texttt{tail = 0}, then Thread A receives ticket \texttt{0} and slot \texttt{0}, Thread B receives ticket \texttt{1} and slot \texttt{1}, Thread C receives ticket \texttt{2} and slot \texttt{2}, and Thread D receives ticket \texttt{3} and slot \texttt{3}. \cite{lcrq}
+
+\textbf{Here put a figure: threads distributed across different ring positions.}
+
+Unlike the Michael-Scott Queue, where multiple threads may attempt to update the same \texttt{tail.next} pointer, the LCRQ spreads concurrent operations across many slots. This dramatically reduces contention because threads are typically working on different positions of the ring. \cite{lcrq}
+
+Once a suitable slot is found, the element is inserted using an atomic update operation. The paper describes this using a double-word compare-and-swap (\texttt{CAS2}), which atomically updates both the slot metadata and the stored value. \cite{lcrq}
+
+Removal follows a similar approach. Instead of advancing through a linked list, a thread reserves a dequeue position using \texttt{ticket = FAA(head, 1)}. The ticket determines which slot should be examined. If a valid value is found, the slot is atomically marked as consumed and the value is returned to the caller. \cite{lcrq}
+
+As a result, both enqueue and dequeue operations primarily consist of obtaining a ticket using FAA, mapping the ticket to a ring position, and performing an atomic update on the selected slot. This avoids the repeated retries typically observed in CAS-based linked-list queues under heavy contention. \cite{lcrq}
+
+Eventually a ring may become full or reach a state where further insertions are no longer possible. When this happens, the ring is marked as closed and a new CRQ is allocated. \cite{lcrq}
+
+The new ring is then attached using the same linked-list approach employed by the Michael-Scott Queue. \cite{lcrq}
+
+\textbf{Here put a figure: linking multiple Concurrent Ring Queues.}
+
+This is the reason for the name Linked Concurrent Ring Queue. The algorithm combines two ideas: the linked structure of the Michael-Scott Queue and the high-throughput ring-buffer design of a Concurrent Ring Queue. \cite{lcrq}
+
+In other words, the LCRQ can be viewed as a Michael-Scott Queue whose nodes are themselves concurrent ring buffers. \cite{lcrq}
+
+The main advantage of the LCRQ is that contention is distributed across a large number of slots rather than concentrated on a small number of shared pointers. While the Michael-Scott Queue relies heavily on CAS operations on \texttt{Head} and \texttt{Tail}, the LCRQ uses FAA to assign unique positions and only performs atomic updates on individual ring slots. This design allows the algorithm to achieve significantly higher throughput under heavily concurrent workloads and is one of the reasons it is often considered a natural evolution of the Michael-Scott Queue on modern multicore systems.

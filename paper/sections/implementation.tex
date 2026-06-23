@@ -1,0 +1,83 @@
+
+\section{Implementation}
+The main topic of this project is the construction of a Michael-Scott-inspired lock-free queue and an LCRQ-inspired queue approach. The first implementation follows the basic idea of the Michael-Scott algorithm more directly, using linked nodes and atomic pointer updates. The second implementation is inspired by the Linked Concurrent Ring Queue idea, but it should not be considered a full implementation of the original LCRQ paper. It uses some of the same ideas, such as linked segments, ring-like storage, and atomic updates, in order to study how this style behaves in practice.
+
+The goal is not only to write the queues, but also to compare them. For this reason, the implementations are tested and measured against each other and against the official JDK \texttt{ConcurrentLinkedQueue}. This gives a baseline from the Java standard library and makes it easier to see whether the custom approaches behave correctly and how their performance changes with different thread counts.
+
+
+\subsection{Custom MSConcurrentLinkedQueue implementation}
+The first custom queue implementation is the Michael-Scott-inspired queue. In the source code this class is named \texttt{MSQueue}. The reason for this implementation is to build a simple lock-free queue with the same general idea used by \texttt{ConcurrentLinkedQueue}: a linked list of nodes, a \texttt{head} pointer, a \texttt{tail} pointer, and atomic updates instead of locks. The official \texttt{ConcurrentLinkedQueue} is a good comparison point because it is an unbounded, thread-safe, non-blocking FIFO queue from the JDK and its implementation is based on the Michael and Scott queue design. \cite{clq-docs}
+
+The queue stores its elements in linked \texttt{Node} objects. Each node has a final \texttt{item} field and a \texttt{volatile} \texttt{next} field. The queue itself also has \texttt{volatile} \texttt{head} and \texttt{tail} references. The constructor creates one dummy node and makes both \texttt{head} and \texttt{tail} point to it. This dummy node is useful because the first real value is always stored in \texttt{head.next}, so the code does not need a special case for the first insertion.
+
+The implementation uses \texttt{VarHandle}s for the shared references that must be updated atomically. In the static block, \texttt{HEAD}, \texttt{TAIL}, and \texttt{NEXT} are created with \texttt{MethodHandles.lookup()}. These handles are then used for \texttt{compareAndSet} operations on \texttt{head}, \texttt{tail}, and \texttt{next}. The volatile fields give visibility between threads, while the CAS operations are used to change shared links only if the expected value is still the current one. If another thread has already changed the queue, the CAS fails and the operation retries.
+
+The most important methods are \texttt{offer} and \texttt{poll}. This is also where most papers about concurrent queues focus, because these are the enqueue and dequeue operations. They define where items enter and leave the queue, where the main contention happens, and where the main atomic updates are performed. The rest of the API is still implemented, but \texttt{offer} and \texttt{poll} are the core of the lock-free behavior.
+
+In \texttt{offer}, the method first rejects \texttt{null} values and creates a new node for the element. Then it repeatedly reads the current \texttt{tail} and the \texttt{next} field of that tail node. If \texttt{next} is \texttt{null}, the tail really looks like the last node, so the method tries to link the new node using \texttt{NEXT.compareAndSet}. If this CAS succeeds, the element has been inserted into the linked list. After that, the method also tries to move the \texttt{tail} pointer forward with \texttt{TAIL.compareAndSet}. This second CAS is a helping step, so even if it fails, the insertion has already happened.
+
+\paperfigure{figure10.png}{Offer operation in the custom \texttt{MSQueue} implementation.}
+
+If \texttt{offer} sees that \texttt{tail.next} is not \texttt{null}, then another thread has already inserted a node but the \texttt{tail} pointer is behind. In that case, the method helps by trying to advance \texttt{tail} to \texttt{next}. This is an important part of the Michael-Scott style: threads do not only wait for their own operation, they can also help complete the state left by another thread. When a CAS fails, the loop continues and \texttt{Thread.onSpinWait()} is used before retrying.
+
+In \texttt{poll}, the method repeatedly reads \texttt{head}, \texttt{tail}, and \texttt{head.next}. If \texttt{head.next} is \texttt{null}, then there is no real node after the dummy node and the queue is empty, so the method returns \texttt{null}. If \texttt{head} and \texttt{tail} point to the same node but \texttt{next} is not \texttt{null}, then the \texttt{tail} pointer is behind and the method helps move it forward.
+
+\paperfigure{figure11.png}{Poll operation in the custom \texttt{MSQueue} implementation.}
+
+When the queue contains an element, \texttt{poll} reads the value from \texttt{next.item} and then tries to move \texttt{head} from the old dummy node to \texttt{next} with a CAS on the \texttt{HEAD} VarHandle. If this CAS succeeds, the value is returned. The old dummy node is then self-linked with \texttt{h.next = h}. In this implementation this is used as a simple cleanup step, similar to the idea of helping garbage collection by making old nodes easier to detach from the active queue path.
+
+The rest of the API was implemented so that the custom queue can be tested against the official \texttt{ConcurrentLinkedQueue} with the same calls. The implemented operations include \texttt{add}, \texttt{addAll}, \texttt{contains}, \texttt{isEmpty}, \texttt{iterator}, \texttt{offer}, \texttt{peek}, \texttt{poll}, \texttt{remove}, \texttt{size}, \texttt{spliterator}, \texttt{toArray}, and \texttt{toArray(T[] a)}. The supported API follows the methods shown in the JDK documentation. \cite{clq-docs}
+
+\begin{itemize}
+\item \texttt{boolean add(E e)}: inserts the specified element at the tail of this queue.
+\item \texttt{boolean addAll(Collection<? extends E> c)}: appends all of the elements in the specified collection to the end of this queue, in the order returned by the collection's iterator.
+\item \texttt{boolean contains(Object o)}: returns \texttt{true} if this queue contains the specified element.
+\item \texttt{boolean isEmpty()}: returns \texttt{true} if this queue contains no elements.
+\item \texttt{Iterator<E> iterator()}: returns an iterator over the elements in this queue in proper sequence.
+\item \texttt{boolean offer(E e)}: inserts the specified element at the tail of this queue.
+\item \texttt{E peek()}: retrieves, but does not remove, the head of this queue, or returns \texttt{null} if this queue is empty.
+\item \texttt{E poll()}: retrieves and removes the head of this queue, or returns \texttt{null} if this queue is empty.
+\item \texttt{boolean remove(Object o)}: removes a single instance of the specified element from this queue, if it is present.
+\item \texttt{int size()}: returns the number of elements in this queue.
+\item \texttt{Spliterator<E> spliterator()}: returns a \texttt{Spliterator} over the elements in this queue.
+\item \texttt{Object[] toArray()}: returns an array containing all of the elements in this queue, in proper sequence.
+\item \texttt{<T> T[] toArray(T[] a)}: returns an array containing all of the elements in this queue, in proper sequence, using the runtime type of the given array.
+\end{itemize}
+
+Some of these methods are simple wrappers around the main operations. For example, \texttt{add} calls \texttt{offer}, and \texttt{isEmpty} uses \texttt{peek}. Other methods traverse the linked nodes from \texttt{head.next}, such as \texttt{size}, \texttt{contains}, and \texttt{iterator}. The \texttt{toArray} and \texttt{spliterator} methods use a snapshot list, because they need a stable collection of the visible elements at that moment. The \texttt{remove(Object o)} method searches for a matching node and then uses CAS on the previous node's \texttt{next} pointer to unlink it.
+
+Having the same API is useful because the same tests can be applied to the official queue, the custom Michael-Scott-inspired queue, and the LCRQ-inspired queue. If all three queues receive the same operations, then their returned values, final contents, and iteration order can be compared directly. Performance measurements are then used to observe how the queues behave with different numbers of threads, especially when many threads call \texttt{offer} and \texttt{poll} at the same time.
+
+
+\subsection{Custom LinkedConcurrentRingQueue implementation}
+The second custom queue implementation is \texttt{LinkedConcurrentRingQueue}. This implementation was found after searching for efficient lock-free linked queue implementations. The idea looked useful for this project because it combines the linked structure of a Michael-Scott-style queue with array-based segments. The implementation here is not a full implementation of the original LCRQ algorithm. It takes some important ideas from it, mainly the linked segments, the use of positions inside an array, and the use of atomic operations to reduce contention. The purpose is to compare this approach with the Michael-Scott-inspired queue and with the official JDK \texttt{ConcurrentLinkedQueue}. \cite{lcrq}
+
+The queue is made from linked \texttt{Segment} objects. Each segment contains an \texttt{Object[]} array called \texttt{items}. Instead of allocating one linked node for every single element, a segment can store many elements. The queue keeps two \texttt{volatile} references, \texttt{headSeg} and \texttt{tailSeg}, which point to the current head and tail segments. Each segment also has its own \texttt{head}, \texttt{tail}, \texttt{closed}, and \texttt{next} fields. This makes the queue look like a linked list of bounded array blocks.
+
+The original LCRQ uses a real ring buffer and also uses metadata inside each slot. Our implementation is simpler. The segment capacity is rounded to a power of two, but the current code does not reuse the same segment forever like a full circular ring. When a segment reaches its capacity, it is marked as closed and a new segment is linked after it. So it is better to describe this as an LCRQ-inspired segmented queue, not as a complete LCRQ implementation.
+
+The implementation uses \texttt{VarHandle}s for both segment references and array cells. The handles \texttt{HEAD\_SEG}, \texttt{TAIL\_SEG}, and \texttt{SEG\_NEXT} are used to move between linked segments. The handles \texttt{SEG\_HEAD}, \texttt{SEG\_TAIL}, and \texttt{SEG\_CLOSED} are used for the state inside each segment. The \texttt{ARRAY} handle is created with \texttt{MethodHandles.arrayElementVarHandle(Object[].class)} and is used to atomically read and update positions inside the array.
+
+A very important part of this implementation is the ticket-style reservation. In the code, this is done with \texttt{getAndAdd}, not with a normal read. For example, enqueue inside a segment uses \texttt{SEG\_TAIL.getAndAdd(this, 1L)}. This works like a Fetch-And-Add operation: every thread receives a different number and therefore a different array position. This is different from a CAS loop where many threads may try to update the same shared pointer and fail repeatedly. Here, the atomic increment gives each thread its own slot attempt.
+
+The code also uses \texttt{getAcquire} in many places, but for a different reason. \texttt{getAcquire} is used when the code only needs to read a shared value, such as the current \texttt{tailSeg}, \texttt{headSeg}, \texttt{next} segment, or an array cell. It gives the needed acquire ordering for seeing values published by other threads, without doing a full update operation. So the FAA-style part is \texttt{getAndAdd}, while \texttt{getAcquire} is mostly used for safe observation of shared state.
+
+In \texttt{offer}, the outer queue first reads the current \texttt{tailSeg} through the \texttt{TAIL\_SEG} handle. It then calls \texttt{offer} on that segment. If the segment accepts the element, the method returns \texttt{true}. If the segment is full or closed, the outer queue checks \texttt{SEG\_NEXT}. If there is no next segment, it creates a new \texttt{Segment} and tries to attach it using \texttt{SEG\_NEXT.compareAndSet}. If another thread already attached a segment, the method helps by moving \texttt{tailSeg} forward.
+
+\paperfigure{figure12.png}{Offer operation in the custom \texttt{LinkedConcurrentRingQueue} implementation.}
+
+Inside a segment, \texttt{offer} first checks whether the segment is closed. Then it reserves a position by calling \texttt{SEG\_TAIL.getAndAdd}. If the returned ticket is greater than or equal to the segment capacity, the segment is closed and the insert fails, so the outer queue can move to another segment. Otherwise, the ticket is used as the array index. The element is inserted with \texttt{ARRAY.compareAndSet(items, index, EMPTY, e)}. This means that the thread only writes the element if the slot is still marked as \texttt{EMPTY}.
+
+The original LCRQ paper describes a double-word compare-and-swap, usually called CAS2, where the slot metadata and the value can be changed together. Java does not give a simple portable \texttt{VarHandle} operation for doing CAS2 on two independent fields at the same time. For that reason, this implementation uses a simpler representation: each array position stores one object state. A slot can contain \texttt{EMPTY}, \texttt{SKIPPED}, or a real element. This does not fully match the original algorithm, but it keeps the main idea that each slot is updated atomically.
+
+In \texttt{poll}, the outer queue reads the current \texttt{headSeg} and tries to remove an element from that segment. If the segment returns a real value, \texttt{poll} returns it to the caller. If the segment reports \texttt{SEGMENT\_EMPTY}, the outer queue checks whether there is a next segment. If there is no next segment, the whole queue is empty at that moment and \texttt{poll} returns \texttt{null}. If a next segment exists, the method tries to advance \texttt{headSeg} with \texttt{HEAD\_SEG.compareAndSet}.
+
+\paperfigure{figure13.png}{Poll operation in the custom \texttt{LinkedConcurrentRingQueue} implementation.}
+
+Inside a segment, \texttt{poll} first reads the segment \texttt{head} and \texttt{tail}. If \texttt{head} is already greater than or equal to \texttt{tail}, then there is no reserved value to read from that segment. Otherwise, the method reserves a dequeue position with \texttt{SEG\_HEAD.getAndAdd}. This is the same ticket idea as enqueue, but applied to removals. The selected slot is then updated with \texttt{ARRAY.getAndSet(items, index, SKIPPED)}. If the slot contained a real element, that element is returned. If it contained \texttt{EMPTY} or \texttt{SKIPPED}, the method knows that the slot did not produce a value and continues or reports that the segment is empty.
+
+The markers \texttt{EMPTY} and \texttt{SKIPPED} are important for the simplified design. \texttt{EMPTY} means that no producer has successfully placed a value in the slot yet. \texttt{SKIPPED} means that a consumer reached the slot and marked it as no longer useful. This helps the queue avoid returning the same element twice and also lets producers detect that a slot was already skipped under contention.
+
+The methods \texttt{peek}, \texttt{contains}, \texttt{remove}, \texttt{iterator}, \texttt{spliterator}, and \texttt{toArray} are also implemented, so the custom queue exposes the same API shape as \texttt{ConcurrentLinkedQueue}. They are not the main lock-free algorithm, but they are needed for API comparison tests. Most of them work by scanning the linked segments and reading live array slots with \texttt{ARRAY.getAcquire}. The \texttt{remove} method searches for a matching value and then tries to replace it with \texttt{SKIPPED} using \texttt{ARRAY.compareAndSet}.
+
+The main reason for implementing this version is to see whether spreading operations across array positions can reduce contention compared with a pure linked-node queue. In the Michael-Scott-style implementation, many threads often interact with the same \texttt{tail}, \texttt{head}, or \texttt{next} pointers. In this implementation, the linked segment pointers still exist, but most enqueue and dequeue operations first try to work inside the current segment. This is the part that makes it interesting for comparison, even though it is still a simplified LCRQ-inspired approach.
