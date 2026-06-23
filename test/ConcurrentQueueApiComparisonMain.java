@@ -164,16 +164,16 @@ public final class ConcurrentQueueApiComparisonMain {
 
     private static <E> List<NamedQueue<E>> namedQueues() {
         List<NamedQueue<E>> queues = new ArrayList<>();
-        queues.add(new NamedQueue<>("lcrq", new LinkedConcurrentRingQueue<>()));
-        queues.add(new NamedQueue<>("msqueue", new MSQueue<>()));
+        queues.add(new NamedQueue<>("lcrq", new java.util.concurrent.LinkedConcurrentRingQueue<>()));
+        queues.add(new NamedQueue<>("msqueue", new java.util.concurrent.MSConcurrentLinkedQueue<>()));
         queues.add(new NamedQueue<>("official", new ConcurrentLinkedQueue<>()));
         return queues;
     }
 
     private static List<QueueCase> queueCases() {
         return Arrays.asList(
-                new QueueCase("lcrq", LinkedConcurrentRingQueue::new),
-                new QueueCase("msqueue", MSQueue::new),
+                new QueueCase("lcrq", () -> new java.util.concurrent.LinkedConcurrentRingQueue<>()),
+                new QueueCase("msqueue", () -> new java.util.concurrent.MSConcurrentLinkedQueue<>()),
                 new QueueCase("official", ConcurrentLinkedQueue::new));
     }
 

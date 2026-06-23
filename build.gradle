@@ -7,8 +7,8 @@ repositories {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 sourceSets {
@@ -29,22 +29,42 @@ sourceSets {
         compileClasspath += sourceSets.main.output
         runtimeClasspath += sourceSets.main.output
     }
+    benchmark {
+        java {
+            srcDirs = ['test/benchmarks']
+        }
+    }
 }
 
 configurations {
     jcstressImplementation.extendsFrom implementation
     jcstressAnnotationProcessor.extendsFrom annotationProcessor
+    benchmarkImplementation.extendsFrom implementation
+    benchmarkAnnotationProcessor.extendsFrom annotationProcessor
 }
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
 
     jcstressImplementation 'org.openjdk.jcstress:jcstress-core:0.16'
     jcstressAnnotationProcessor 'org.openjdk.jcstress:jcstress-core:0.16'
+
+    benchmarkImplementation 'org.openjdk.jmh:jmh-core:1.37'
+    benchmarkAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.37'
 }
 
 test {
     useJUnitPlatform()
+    failOnNoDiscoveredTests = false
+}
+
+tasks.register('libraryTest', JavaExec) {
+    group = 'verification'
+    description = 'Runs the library-style queue tests against the configured JDK.'
+    dependsOn tasks.named('testClasses')
+    mainClass = 'ConcurrentQueueLibraryTestMain'
+    classpath = sourceSets.test.runtimeClasspath
 }
 
 tasks.register('jcstress', JavaExec) {
@@ -54,4 +74,34 @@ tasks.register('jcstress', JavaExec) {
     mainClass = 'org.openjdk.jcstress.Main'
     classpath = sourceSets.jcstress.runtimeClasspath
     args = ['-f', '1', '-m', 'quick', '-iters', '3']
+}
+
+tasks.register('jmh', JavaExec) {
+    group = 'verification'
+    description = 'Runs JMH benchmarks from test/benchmarks.'
+    dependsOn tasks.named('benchmarkClasses')
+    mainClass = 'org.openjdk.jmh.Main'
+    classpath = sourceSets.benchmark.runtimeClasspath
+
+    if (project.hasProperty('jmhArgs')) {
+        args project.property('jmhArgs').toString().trim().split('\\s+').findAll { !it.isBlank() }
+    } else {
+        args = [
+                'benchmarks.*',
+                '-f', '1',
+                '-wi', '3',
+                '-i', '5',
+                '-w', '1s',
+                '-r', '1s'
+        ]
+    }
+}
+
+tasks.register('printBenchmarkRuntimeClasspath') {
+    group = 'help'
+    description = 'Prints the runtime classpath for the benchmark source set.'
+    dependsOn tasks.named('benchmarkClasses')
+    doLast {
+        println sourceSets.benchmark.runtimeClasspath.asPath
+    }
 }

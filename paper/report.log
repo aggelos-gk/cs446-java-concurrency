@@ -1,59 +1,75 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2026.5.19)  23 JUN 2026 22:21
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.20)  24 JUN 2026 00:00
 entering extended mode
  restricted \write18 enabled.
+ file:line:error style messages enabled.
  %&-line parsing enabled.
 **report.tex
 (./report.tex
-LaTeX2e <2020-02-02> patch level 2
-L3 programming layer <2020-02-14>
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-01-22>
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
-Document Class: article 2019/12/20 v1.4l Standard LaTeX document class
+Document Class: article 2023/05/17 v1.4n Standard LaTeX document class
 (/usr/share/texlive/texmf-dist/tex/latex/base/size11.clo
-File: size11.clo 2019/12/20 v1.4l Standard LaTeX file (size option)
+File: size11.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
 )
-\c@part=\count167
-\c@section=\count168
-\c@subsection=\count169
-\c@subsubsection=\count170
-\c@paragraph=\count171
-\c@subparagraph=\count172
-\c@figure=\count173
-\c@table=\count174
-\abovecaptionskip=\skip47
-\belowcaptionskip=\skip48
-\bibindent=\dimen134
+\c@part=\count187
+\c@section=\count188
+\c@subsection=\count189
+\c@subsubsection=\count190
+\c@paragraph=\count191
+\c@subparagraph=\count192
+\c@figure=\count193
+\c@table=\count194
+\abovecaptionskip=\skip48
+\belowcaptionskip=\skip49
+\bibindent=\dimen140
 )
 (/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2020/01/02 v5.9 Page Geometry
 
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
-Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
-\KV@toks@=\toks14
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks17
 )
 (/usr/share/texlive/texmf-dist/tex/generic/iftex/ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 
 (/usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty
-Package: iftex 2019/11/07 v1.0c TeX engine tests
+Package: iftex 2022/02/03 v1.0f TeX engine tests
 ))
-\Gm@cnth=\count175
-\Gm@cntv=\count176
-\c@Gm@tempcnt=\count177
-\Gm@bindingoffset=\dimen135
-\Gm@wd@mp=\dimen136
-\Gm@odd@mp=\dimen137
-\Gm@even@mp=\dimen138
-\Gm@layoutwidth=\dimen139
-\Gm@layoutheight=\dimen140
-\Gm@layouthoffset=\dimen141
-\Gm@layoutvoffset=\dimen142
-\Gm@dimlist=\toks15
+\Gm@cnth=\count195
+\Gm@cntv=\count196
+\c@Gm@tempcnt=\count197
+\Gm@bindingoffset=\dimen141
+\Gm@wd@mp=\dimen142
+\Gm@odd@mp=\dimen143
+\Gm@even@mp=\dimen144
+\Gm@layoutwidth=\dimen145
+\Gm@layoutheight=\dimen146
+\Gm@layouthoffset=\dimen147
+\Gm@layoutvoffset=\dimen148
+\Gm@dimlist=\toks18
 )
 (/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
-Package: fontenc 2020/02/11 v2.0o Standard LaTeX package
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
 )
+(/home/aggelos/texmf/tex/latex/libertinus/libertinus.sty
+Package: libertinus 2020/05/06 v. 0.02 (Herbert Voss) Supports libertinus fonts
+ for pdflatex/lualatex/xelatex
+
+(/usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2022/06/16 v2.9 package option processing (HA)
+
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+\XKV@toks=\toks19
+\XKV@tempa@toks=\toks20
+)
+\XKV@depth=\count198
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+))
 (/home/aggelos/texmf/tex/latex/libertinus-type1/libertinus-type1.sty
-Package: libertinus-type1 2025/11/17 (Bob Tennent) Supports libertinus fonts fo
+Package: libertinus-type1 2023/06/23 (Bob Tennent) Supports libertinus fonts fo
 r latex/pdflatex.
 
 (/usr/share/texlive/texmf-dist/tex/generic/iftex/ifxetex.sty
@@ -62,25 +78,14 @@ Package: ifxetex 2019/10/25 v0.7 ifxetex legacy package. Use iftex instead.
 (/usr/share/texlive/texmf-dist/tex/generic/iftex/ifluatex.sty
 Package: ifluatex 2019/10/25 v1.5 ifluatex legacy package. Use iftex instead.
 )
-(/home/aggelos/texmf/tex/latex/xkeyval/xkeyval.sty
-Package: xkeyval 2014/12/03 v2.7a package option processing (HA)
-
-(/home/aggelos/texmf/tex/generic/xkeyval/xkeyval.tex
-(/home/aggelos/texmf/tex/generic/xkeyval/xkvutils.tex
-\XKV@toks=\toks16
-\XKV@tempa@toks=\toks17
-)
-\XKV@depth=\count178
-File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
-))
 (/usr/share/texlive/texmf-dist/tex/latex/base/textcomp.sty
 Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
 )
 (/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
-Package: fontenc 2020/02/11 v2.0o Standard LaTeX package
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
 )
-(/home/aggelos/texmf/tex/latex/fontaxes/fontaxes.sty
-Package: fontaxes 2014/03/23 v1.0d Font selection axes
+(/usr/share/texlive/texmf-dist/tex/latex/fontaxes/fontaxes.sty
+Package: fontaxes 2020/07/21 v1.0e Font selection axes
 LaTeX Info: Redefining \upshape on input line 29.
 LaTeX Info: Redefining \itshape on input line 31.
 LaTeX Info: Redefining \slshape on input line 33.
@@ -91,51 +96,60 @@ LaTeX Info: Redefining \ulcshape on input line 41.
 LaTeX Info: Redefining \textsw on input line 47.
 LaTeX Info: Redefining \textssc on input line 48.
 LaTeX Info: Redefining \textulc on input line 49.
-))
+)))
 (/usr/share/texlive/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
-Package: fancyhdr 2019/01/31 v3.10 Extensive control of page headers and footer
-s
-\f@nch@headwidth=\skip49
-\f@nch@O@elh=\skip50
-\f@nch@O@erh=\skip51
-\f@nch@O@olh=\skip52
-\f@nch@O@orh=\skip53
-\f@nch@O@elf=\skip54
-\f@nch@O@erf=\skip55
-\f@nch@O@olf=\skip56
-\f@nch@O@orf=\skip57
+Package: fancyhdr 2022/11/09 v4.1 Extensive control of page headers and footers
+
+\f@nch@headwidth=\skip50
+\f@nch@O@elh=\skip51
+\f@nch@O@erh=\skip52
+\f@nch@O@olh=\skip53
+\f@nch@O@orh=\skip54
+\f@nch@O@elf=\skip55
+\f@nch@O@erf=\skip56
+\f@nch@O@olf=\skip57
+\f@nch@O@orf=\skip58
 )
 (/usr/share/texlive/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip16
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
-Package: graphicx 2019/11/30 v1.2a Enhanced LaTeX Graphics (DPC,SPQR)
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
 
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
-Package: graphics 2019/11/30 v1.4a Standard LaTeX Graphics (DPC,SPQR)
+Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
 
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/trig.sty
-Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
 )
 (/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
-Package graphics Info: Driver file: pdftex.def on input line 105.
+Package graphics Info: Driver file: pdftex.def on input line 107.
 
 (/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def
-File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
+File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
 ))
-\Gin@req@height=\dimen143
-\Gin@req@width=\dimen144
+\Gin@req@height=\dimen149
+\Gin@req@width=\dimen150
 )
-\paperfigurewidth=\skip58
-\paperfigureheight=\skip59
+\paperfigurewidth=\skip59
+\paperfigureheight=\skip60
+LaTeX Font Info:    Trying to load font information for T1+LibertinusSerif-TLF 
+on input line 73.
 
-(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdfmode.def
-File: l3backend-pdfmode.def 2020-02-03 L3 backend support: PDF mode
-\l__kernel_color_stack_int=\count179
-\l__pdf_internal_box=\box45
+(/home/aggelos/texmf/tex/latex/libertinus-type1/T1LibertinusSerif-TLF.fd
+File: T1LibertinusSerif-TLF.fd 2022/11/07 (autoinst) Font definitions for T1/Li
+bertinusSerif-TLF.
+)
+LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/m/n' will be
+(Font)              scaled to size 10.95pt on input line 73.
+
+(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count199
+\l__pdf_internal_box=\box51
 )
 (./report.aux)
 \openout1 = `report.aux'.
@@ -154,15 +168,6 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 73.
 LaTeX Font Info:    ... okay on input line 73.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 73.
 LaTeX Font Info:    ... okay on input line 73.
-LaTeX Font Info:    Trying to load font information for T1+LibertinusSerif-TLF 
-on input line 73.
-
-(/home/aggelos/texmf/tex/latex/libertinus-type1/T1LibertinusSerif-TLF.fd
-File: T1LibertinusSerif-TLF.fd 2024/09/22 (autoinst) Font definitions for T1/Li
-bertinusSerif-TLF.
-)
-LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/m/n' will be
-(Font)              scaled to size 10.95pt on input line 73.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -198,21 +203,21 @@ LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/m/n' will be
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-\c@mv@tabular=\count180
-\c@mv@boldtabular=\count181
+\c@mv@tabular=\count266
+\c@mv@boldtabular=\count267
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count182
-\scratchdimen=\dimen145
-\scratchbox=\box46
-\nofMPsegments=\count183
-\nofMParguments=\count184
-\everyMPshowfont=\toks18
-\MPscratchCnt=\count185
-\MPscratchDim=\dimen146
-\MPnumerator=\count186
-\makeMPintoPDFobject=\count187
-\everyMPtoPDFconversion=\toks19
+\scratchcounter=\count268
+\scratchdimen=\dimen151
+\scratchbox=\box52
+\nofMPsegments=\count269
+\nofMParguments=\count270
+\everyMPshowfont=\toks21
+\MPscratchCnt=\count271
+\MPscratchDim=\dimen152
+\MPnumerator=\count272
+\makeMPintoPDFobject=\count273
+\everyMPtoPDFconversion=\toks22
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -247,7 +252,7 @@ LaTeX Font Info:    Trying to load font information for T1+LibertinusMono-TLF o
 n input line 8.
 
 (/home/aggelos/texmf/tex/latex/libertinus-type1/T1LibertinusMono-TLF.fd
-File: T1LibertinusMono-TLF.fd 2025/01/11 (autoinst) Font definitions for T1/Lib
+File: T1LibertinusMono-TLF.fd 2022/11/07 (autoinst) Font definitions for T1/Lib
 ertinusMono-TLF.
 )
 LaTeX Font Info:    Font shape `T1/LibertinusMono-TLF/m/n' will be
@@ -255,13 +260,16 @@ LaTeX Font Info:    Font shape `T1/LibertinusMono-TLF/m/n' will be
 
 [1
 
-{/home/aggelos/.texlive2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}])
-(./sections/background.tex
+{/home/aggelos/.texlive2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/home
+/aggelos/texmf/fonts/enc/dvips/libertinus-type1/lbts_sfissr.enc}{/home/aggelos/
+texmf/fonts/enc/dvips/libertinus-type1/lbts_75t36g.enc}{/home/aggelos/texmf/fon
+ts/enc/dvips/libertinus-type1/lbts_tll2u3.enc}]) (./sections/background.tex
 LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/m/n' will be
 (Font)              scaled to size 13.0pt on input line 6.
 LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/b/n' will be
 (Font)              scaled to size 13.0pt on input line 6.
- [2]
+
+[2]
 <figures/figure1.png, id=12, 361.35pt x 283.0575pt>
 File: figures/figure1.png Graphic file (type png)
 <use figures/figure1.png>
@@ -377,13 +385,14 @@ LaTeX Font Info:    Trying to load font information for TS1+LibertinusSerif-TLF
  on input line 32.
 
 (/home/aggelos/texmf/tex/latex/libertinus-type1/TS1LibertinusSerif-TLF.fd
-File: TS1LibertinusSerif-TLF.fd 2024/09/22 (autoinst) Font definitions for TS1/
+File: TS1LibertinusSerif-TLF.fd 2022/11/07 (autoinst) Font definitions for TS1/
 LibertinusSerif-TLF.
 )
 LaTeX Font Info:    Font shape `TS1/LibertinusSerif-TLF/m/n' will be
 (Font)              scaled to size 10.95pt on input line 32.
 
-[16] [17]
+[16{/home/aggelos/texmf/fonts/enc/dvips/libertinus-type1/lbts_rlktsf.enc}]
+[17]
 <figures/figure17.png, id=93, 496.85625pt x 351.56343pt>
 File: figures/figure17.png Graphic file (type png)
 <use figures/figure17.png>
@@ -411,11 +420,17 @@ Underfull \hbox (badness 1024) in paragraph at lines 81--82
 also im-ple-mented, so the cus-tom queue ex-poses the same API
  []
 
-) (./sections/evaluation.tex [19 <./figures/figure18.png>])
+) (./sections/evaluation.tex [19 <./figures/figure18.png>] [20]
+<figures/figure19.png, id=107, 1044.90375pt x 675.52374pt>
+File: figures/figure19.png Graphic file (type png)
+<use figures/figure19.png>
+Package pdftex.def Info: figures/figure19.png  used on input line 33.
+(pdftex.def)             Requested size: 267.3956pt x 172.86958pt.
+)
 (./sections/conclusion.tex) (./sections/references.tex
 LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/m/it' will be
 (Font)              scaled to size 10.95pt on input line 5.
-
+ [21 <./figures/figure19.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 33--36
 []\T1/LibertinusSerif-TLF/m/n/10.95 Oracle. \T1/LibertinusSerif-TLF/m/it/10.95 
 Con-cur-rentLinkedQueue (Java Plat-form SE 8)\T1/LibertinusSerif-TLF/m/n/10.95 
@@ -428,28 +443,30 @@ Underfull \hbox (badness 10000) in paragraph at lines 33--36
 / java / util / concurrent /
  []
 
-) [20] (./report.aux) ) 
+) [22{/home/aggelos/texmf/fonts/enc/dvips/libertinus-type1/lbts_nufysp.enc}]
+(./report.aux)
+ ***********
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-01-22>
+ ***********
+ ) 
 Here is how much of TeX's memory you used:
- 2924 strings out of 483183
- 47379 string characters out of 5966292
- 275817 words of memory out of 5000000
- 17862 multiletter control sequences out of 15000+600000
- 594258 words of font info for 60 fonts, out of 8000000 for 9000
+ 3385 strings out of 476182
+ 60790 string characters out of 5795595
+ 1933975 words of memory out of 5000000
+ 25318 multiletter control sequences out of 15000+600000
+ 620000 words of font info for 72 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 30i,11n,45p,786b,320s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/home/aggelos/texmf/fonts/enc/dvips/libertinus-type1/lb
-n1_sncvby.enc}{/home/aggelos/texmf/fonts/enc/dvips/libertinus-type1/lbn1_rlktsf
-.enc}{/home/aggelos/texmf/fonts/enc/dvips/libertinus-type1/lbn1_or3pzs.enc}{/ho
-me/aggelos/texmf/fonts/enc/dvips/libertinus-type1/lbn1_75t36g.enc}{/home/aggelo
-s/texmf/fonts/enc/dvips/libertinus-type1/lbn1_sfissr.enc}</home/aggelos/texmf/f
-onts/type1/public/libertinus-type1/LibertinusMono-Regular.pfb></home/aggelos/te
-xmf/fonts/type1/public/libertinus-type1/LibertinusSerif-Bold.pfb></home/aggelos
-/texmf/fonts/type1/public/libertinus-type1/LibertinusSerif-Italic.pfb></home/ag
-gelos/texmf/fonts/type1/public/libertinus-type1/LibertinusSerif-Regular.pfb>
-Output written on report.pdf (20 pages, 1136086 bytes).
+ 65i,12n,68p,1045b,334s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</home/aggelos/texmf/fonts/type1/public/libertinus-type1/LibertinusMono-Regul
+ar.pfb></home/aggelos/texmf/fonts/type1/public/libertinus-type1/LibertinusSerif
+-Bold.pfb></home/aggelos/texmf/fonts/type1/public/libertinus-type1/LibertinusSe
+rif-Italic.pfb></home/aggelos/texmf/fonts/type1/public/libertinus-type1/Liberti
+nusSerif-Regular.pfb>
+Output written on report.pdf (22 pages, 1513548 bytes).
 PDF statistics:
- 129 PDF objects out of 1000 (max. 8388607)
- 66 compressed objects within 1 object stream
+ 142 PDF objects out of 1000 (max. 8388607)
+ 70 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 91 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 96 words of extra memory for PDF output out of 10000 (max. 10000000)
 

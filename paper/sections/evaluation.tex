@@ -1,8 +1,33 @@
 \section{Evaluation}
+Before looking at throughput or scalability, the first thing I wanted to check was whether the two custom queues are actually valid and whether they behave the same way as the JDK \texttt{ConcurrentLinkedQueue}. For that reason, I first ran a set of custom correctness tests for both \texttt{MSConcurrentLinkedQueue} and \texttt{LinkedConcurrentRingQueue}. These tests compare the custom queues directly with \texttt{ConcurrentLinkedQueue} and check the basic queue API step by step. In practice this means checking operations such as \texttt{add}, \texttt{offer}, \texttt{poll}, \texttt{peek}, \texttt{contains}, \texttt{remove}, \texttt{iterator}, \texttt{spliterator}, and \texttt{toArray}, along with \texttt{null} handling and general FIFO behavior. I also used randomized differential tests with many mixed operations, so that both custom queues and the official JDK queue receive the same sequence of calls and can be compared on returned values and final contents.
+
+I also wanted this check to be done in a setup that is as close as possible to real library use, and not only as standalone classes in my own source folder. Because of that, the two implementations were installed directly into a local OpenJDK 21 build under \texttt{java.util.concurrent} as \texttt{MSConcurrentLinkedQueue} and \texttt{LinkedConcurrentRingQueue}. The JDK build used for these tests reports itself as \texttt{OpenJDK 21.0.12-internal}. On top of the sequential and randomized API checks, I also ran multithreaded stress tests across different thread counts and small JCStress tests for simple race patterns such as two concurrent \texttt{offer} calls and \texttt{offer}/\texttt{poll} interleavings. The point of all this was to make sure that before talking about performance, the two custom queues already look correct and behave like the official JDK queue in the cases tested.
+
 This section should define how the queue implementations will be evaluated. The evaluation should include throughput, latency, scalability across thread counts, and behavior under different producer-consumer ratios.
 
 \subsection{Experimental Setup}
-Describe hardware, JVM version, benchmark configuration, warm-up policy, and measurement duration.
+The experiments were run on my laptop, a Lenovo ThinkBook 15 G2 ARE. The machine has an AMD Ryzen 5 4500U with Radeon Graphics and 8 GB of DDR4 RAM. The CPU has 384 KB of L1 cache, 3 MB of L2 cache, and 8 MB of L3 cache.
 
+During the experiments, the laptop was connected to power, so it was not running on battery. I also disabled CPU boost / turbo boost in order to make the results more stable and avoid frequency changes during the benchmarks. This was checked using sudo turbostat, where the output showed:
+
+cpufreq boost: 0
+
+This means that boost was disabled while the measurements were taken.
 \subsection{Metrics}
-Report operations per second, average latency, tail latency if available, and scalability relative to the single-thread baseline.
+For the performance measurements, I used JMH, the Java Microbenchmark Harness. JMH is a benchmarking framework for Java that helps run more reliable microbenchmarks by handling things like warm-up iterations, measurement iterations, JVM optimizations, and repeated runs.
+
+I ran two benchmark tests. The first one was a round-trip queue benchmark, where each operation performs an offer() followed by a poll() on the same queue. This checks the basic cost of inserting and removing an item from the queue.
+
+The second test was a producer-consumer benchmark. In this benchmark, some threads only produce items using offer(), while other threads consume items using poll(). I tested different thread configurations: 1 producer / 1 consumer, 2 producers / 2 consumers, and 4 producers / 4 consumers.
+
+The benchmarks compared three queue implementations:
+
+Java’s ConcurrentLinkedQueue,
+my custom MSConcurrentLinkedQueue and
+LinkedConcurrentRingQueue
+
+The JMH configuration used 3 warm-up iterations and 5 measurement iterations. Each iteration lasted 1 second, and the benchmark was forked once. The benchmark mode was throughput, so JMH measured how many operations per second each queue implementation could complete.
+
+For the final results, I report the execution times in milliseconds (ms), so lower values mean better performance.
+
+\paperfigure{figure19.png}{throughput evaluation}

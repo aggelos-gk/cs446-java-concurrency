@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Spliterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -17,15 +18,15 @@ final class QueueTestSupport {
 
     static Stream<QueueCase> customQueueCases() {
         return Stream.of(
-                new QueueCase("lcrq", LinkedConcurrentRingQueue::new),
-                new QueueCase("msqueue", MSQueue::new)
+                new QueueCase("lcrq", () -> new java.util.concurrent.LinkedConcurrentRingQueue<>()),
+                new QueueCase("msqueue", () -> new java.util.concurrent.MSConcurrentLinkedQueue<>())
         );
     }
 
     static Stream<QueueCase> allQueueCases() {
         return Stream.of(
-                new QueueCase("lcrq", LinkedConcurrentRingQueue::new),
-                new QueueCase("msqueue", MSQueue::new),
+                new QueueCase("lcrq", () -> new java.util.concurrent.LinkedConcurrentRingQueue<>()),
+                new QueueCase("msqueue", () -> new java.util.concurrent.MSConcurrentLinkedQueue<>()),
                 new QueueCase("official", ConcurrentLinkedQueue::new)
         );
     }
@@ -155,6 +156,61 @@ final class QueueTestSupport {
         for (Thread thread : threads) {
             thread.join();
         }
+    }
+
+    static void assertTrue(boolean condition) {
+        assertTrue(condition, "expected condition to be true");
+    }
+
+    static void assertTrue(boolean condition, String message) {
+        if (!condition) {
+            throw new AssertionError(message);
+        }
+    }
+
+    static void assertFalse(boolean condition) {
+        assertFalse(condition, "expected condition to be false");
+    }
+
+    static void assertFalse(boolean condition, String message) {
+        if (condition) {
+            throw new AssertionError(message);
+        }
+    }
+
+    static void assertEquals(Object expected, Object actual) {
+        assertEquals(expected, actual, "expected=" + expected + ", actual=" + actual);
+    }
+
+    static void assertEquals(Object expected, Object actual, String message) {
+        if (!Objects.equals(expected, actual)) {
+            throw new AssertionError(message + " (expected=" + expected + ", actual=" + actual + ")");
+        }
+    }
+
+    static void assertArrayEquals(Object[] expected, Object[] actual) {
+        if (!Arrays.equals(expected, actual)) {
+            throw new AssertionError("array mismatch expected=" + Arrays.toString(expected)
+                    + ", actual=" + Arrays.toString(actual));
+        }
+    }
+
+    static <T extends Throwable> void assertThrows(Class<T> expectedType, ThrowingRunnable action) {
+        try {
+            action.run();
+        } catch (Throwable t) {
+            if (expectedType.isInstance(t)) {
+                return;
+            }
+            throw new AssertionError("expected exception " + expectedType.getName()
+                    + " but got " + t.getClass().getName(), t);
+        }
+        throw new AssertionError("expected exception " + expectedType.getName());
+    }
+
+    @FunctionalInterface
+    interface ThrowingRunnable {
+        void run() throws Exception;
     }
 
     static final class QueueCase {

@@ -1,15 +1,9 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Stream;
-
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 final class ConcurrentQueueRandomizedDifferentialTest {
     private static final int SEEDS = 25;
@@ -19,8 +13,14 @@ final class ConcurrentQueueRandomizedDifferentialTest {
         return QueueTestSupport.customQueueCases();
     }
 
-    @ParameterizedTest(name = "{0} randomized API behavior matches ConcurrentLinkedQueue")
-    @MethodSource("customQueues")
+    static void runAll() {
+        ConcurrentQueueRandomizedDifferentialTest test = new ConcurrentQueueRandomizedDifferentialTest();
+        for (QueueTestSupport.QueueCase queueCase : customQueues().toList()) {
+            test.randomizedApiBehaviorMatchesConcurrentLinkedQueue(queueCase);
+            test.randomizedNullExceptionsMatchReference(queueCase);
+        }
+    }
+
     void randomizedApiBehaviorMatchesConcurrentLinkedQueue(QueueTestSupport.QueueCase queueCase) {
         for (int seed = 0; seed < SEEDS; seed++) {
             Queue<Object> actual = queueCase.create();
@@ -31,48 +31,48 @@ final class ConcurrentQueueRandomizedDifferentialTest {
                 Object value = randomValue(random);
                 switch (random.nextInt(14)) {
                     case 0:
-                        assertEquals(expected.add(value), actual.add(value), context(seed, op, "add"));
+                        QueueTestSupport.assertEquals(expected.add(value), actual.add(value), context(seed, op, "add"));
                         break;
                     case 1:
-                        assertEquals(expected.offer(value), actual.offer(value), context(seed, op, "offer"));
+                        QueueTestSupport.assertEquals(expected.offer(value), actual.offer(value), context(seed, op, "offer"));
                         break;
                     case 2:
                         List<Object> batch = Arrays.asList(value, randomValue(random), randomValue(random));
-                        assertEquals(expected.addAll(batch), actual.addAll(batch), context(seed, op, "addAll"));
+                        QueueTestSupport.assertEquals(expected.addAll(batch), actual.addAll(batch), context(seed, op, "addAll"));
                         break;
                     case 3:
-                        assertEquals(expected.peek(), actual.peek(), context(seed, op, "peek"));
+                        QueueTestSupport.assertEquals(expected.peek(), actual.peek(), context(seed, op, "peek"));
                         break;
                     case 4:
-                        assertEquals(expected.poll(), actual.poll(), context(seed, op, "poll"));
+                        QueueTestSupport.assertEquals(expected.poll(), actual.poll(), context(seed, op, "poll"));
                         break;
                     case 5:
-                        assertEquals(expected.contains(value), actual.contains(value), context(seed, op, "contains"));
+                        QueueTestSupport.assertEquals(expected.contains(value), actual.contains(value), context(seed, op, "contains"));
                         break;
                     case 6:
-                        assertEquals(expected.remove(value), actual.remove(value), context(seed, op, "remove"));
+                        QueueTestSupport.assertEquals(expected.remove(value), actual.remove(value), context(seed, op, "remove"));
                         break;
                     case 7:
-                        assertEquals(expected.size(), actual.size(), context(seed, op, "size"));
+                        QueueTestSupport.assertEquals(expected.size(), actual.size(), context(seed, op, "size"));
                         break;
                     case 8:
-                        assertEquals(expected.isEmpty(), actual.isEmpty(), context(seed, op, "isEmpty"));
+                        QueueTestSupport.assertEquals(expected.isEmpty(), actual.isEmpty(), context(seed, op, "isEmpty"));
                         break;
                     case 9:
-                        assertEquals(QueueTestSupport.listFromIterator(expected), QueueTestSupport.listFromIterator(actual), context(seed, op, "iterator"));
+                        QueueTestSupport.assertEquals(QueueTestSupport.listFromIterator(expected), QueueTestSupport.listFromIterator(actual), context(seed, op, "iterator"));
                         break;
                     case 10:
-                        assertEquals(QueueTestSupport.listFromSpliterator(expected.spliterator()), QueueTestSupport.listFromSpliterator(actual.spliterator()), context(seed, op, "spliterator"));
+                        QueueTestSupport.assertEquals(QueueTestSupport.listFromSpliterator(expected.spliterator()), QueueTestSupport.listFromSpliterator(actual.spliterator()), context(seed, op, "spliterator"));
                         break;
                     case 11:
-                        assertEquals(Arrays.asList(expected.toArray()), Arrays.asList(actual.toArray()), context(seed, op, "toArray"));
+                        QueueTestSupport.assertEquals(Arrays.asList(expected.toArray()), Arrays.asList(actual.toArray()), context(seed, op, "toArray"));
                         break;
                     case 12:
-                        assertEquals(Arrays.asList(expected.toArray(new Object[0])), Arrays.asList(actual.toArray(new Object[0])), context(seed, op, "toArray small"));
+                        QueueTestSupport.assertEquals(Arrays.asList(expected.toArray(new Object[0])), Arrays.asList(actual.toArray(new Object[0])), context(seed, op, "toArray small"));
                         break;
                     case 13:
                         int extra = random.nextInt(8);
-                        assertEquals(Arrays.asList(expected.toArray(new Object[expected.size() + extra])),
+                        QueueTestSupport.assertEquals(Arrays.asList(expected.toArray(new Object[expected.size() + extra])),
                                 Arrays.asList(actual.toArray(new Object[actual.size() + extra])),
                                 context(seed, op, "toArray large"));
                         break;
@@ -81,18 +81,16 @@ final class ConcurrentQueueRandomizedDifferentialTest {
                 }
             }
 
-            assertEquals(QueueTestSupport.drain(expected), QueueTestSupport.drain(actual), "final drain mismatch seed=" + seed);
+            QueueTestSupport.assertEquals(QueueTestSupport.drain(expected), QueueTestSupport.drain(actual), "final drain mismatch seed=" + seed);
         }
     }
 
-    @ParameterizedTest(name = "{0} randomized null exceptions match ConcurrentLinkedQueue")
-    @MethodSource("customQueues")
     void randomizedNullExceptionsMatchReference(QueueTestSupport.QueueCase queueCase) {
         Queue<Object> queue = queueCase.create();
-        assertThrows(NullPointerException.class, () -> queue.add(null));
-        assertThrows(NullPointerException.class, () -> queue.offer(null));
-        assertEquals(false, queue.contains(null));
-        assertEquals(false, queue.remove(null));
+        QueueTestSupport.assertThrows(NullPointerException.class, () -> queue.add(null));
+        QueueTestSupport.assertThrows(NullPointerException.class, () -> queue.offer(null));
+        QueueTestSupport.assertEquals(false, queue.contains(null));
+        QueueTestSupport.assertEquals(false, queue.remove(null));
     }
 
     private static Object randomValue(Random random) {

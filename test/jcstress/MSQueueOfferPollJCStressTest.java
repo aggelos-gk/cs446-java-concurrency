@@ -1,6 +1,7 @@
 package jcstress;
 
 import java.util.Queue;
+import java.util.concurrent.MSConcurrentLinkedQueue;
 
 import org.openjdk.jcstress.annotations.Actor;
 import org.openjdk.jcstress.annotations.Arbiter;
@@ -16,7 +17,7 @@ import static org.openjdk.jcstress.annotations.Expect.ACCEPTABLE;
 @Outcome(id = "-1, 1", expect = ACCEPTABLE, desc = "poll linearizes before offer; arbiter later observes the element")
 @State
 public class MSQueueOfferPollJCStressTest {
-    private final Queue<Integer> queue = newQueue("MSQueue");
+    private final Queue<Integer> queue = new MSConcurrentLinkedQueue<>();
 
     @Actor
     public void actor1() {
@@ -35,14 +36,5 @@ public class MSQueueOfferPollJCStressTest {
 
     private static int value(Integer value) {
         return value == null ? -1 : value;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static Queue<Integer> newQueue(String className) {
-        try {
-            return (Queue<Integer>) Class.forName(className).getConstructor().newInstance();
-        } catch (ReflectiveOperationException e) {
-            throw new IllegalStateException(e);
-        }
     }
 }
