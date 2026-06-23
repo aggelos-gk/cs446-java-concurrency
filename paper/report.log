@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2026.5.19)  23 JUN 2026 21:02
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2026.5.19)  23 JUN 2026 22:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -243,46 +243,37 @@ LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/b/n' will be
 ) (./sections/introduction.tex
 LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/b/n' will be
 (Font)              scaled to size 14.4pt on input line 1.
-<figures/figure1.png, id=1, 361.35pt x 283.0575pt>
-File: figures/figure1.png Graphic file (type png)
-<use figures/figure1.png>
-Package pdftex.def Info: figures/figure1.png  used on input line 8.
-(pdftex.def)             Requested size: 220.69887pt x 172.88077pt.
- [1
-
-{/home/aggelos/.texlive2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<figures/figure2.png, id=10, 358.33875pt x 134.00063pt>
-File: figures/figure2.png Graphic file (type png)
-<use figures/figure2.png>
-Package pdftex.def Info: figures/figure2.png  used on input line 10.
-(pdftex.def)             Requested size: 295.22302pt x 110.3985pt.
-)
-(./sections/background.tex
 LaTeX Font Info:    Trying to load font information for T1+LibertinusMono-TLF o
-n input line 4.
+n input line 8.
 
 (/home/aggelos/texmf/tex/latex/libertinus-type1/T1LibertinusMono-TLF.fd
 File: T1LibertinusMono-TLF.fd 2025/01/11 (autoinst) Font definitions for T1/Lib
 ertinusMono-TLF.
 )
 LaTeX Font Info:    Font shape `T1/LibertinusMono-TLF/m/n' will be
-(Font)              scaled to size 9.30756pt on input line 4.
+(Font)              scaled to size 9.30756pt on input line 8.
 
-[2 <./figures/figure1.png> <./figures/figure2.png>]
+[1
+
+{/home/aggelos/.texlive2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}])
+(./sections/background.tex
 LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/m/n' will be
 (Font)              scaled to size 13.0pt on input line 6.
 LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/b/n' will be
 (Font)              scaled to size 13.0pt on input line 6.
+ [2]
+<figures/figure1.png, id=12, 361.35pt x 283.0575pt>
 File: figures/figure1.png Graphic file (type png)
 <use figures/figure1.png>
 Package pdftex.def Info: figures/figure1.png  used on input line 14.
 (pdftex.def)             Requested size: 220.69887pt x 172.88077pt.
- [3]
+ [3 <./figures/figure1.png>]
+<figures/figure2.png, id=18, 358.33875pt x 134.00063pt>
 File: figures/figure2.png Graphic file (type png)
 <use figures/figure2.png>
 Package pdftex.def Info: figures/figure2.png  used on input line 27.
 (pdftex.def)             Requested size: 295.22302pt x 110.3985pt.
- [4]
+ [4 <./figures/figure2.png>]
 LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/b/n' will be
 (Font)              scaled to size 10.95pt on input line 41.
 <figures/figure3.png, id=23, 359.09157pt x 195.73125pt>
@@ -290,57 +281,84 @@ File: figures/figure3.png Graphic file (type png)
 <use figures/figure3.png>
 Package pdftex.def Info: figures/figure3.png  used on input line 48.
 (pdftex.def)             Requested size: 295.22408pt x 160.91878pt.
- [5]
-<figures/figure4.png, id=27, 727.21687pt x 546.54187pt>
+ [5 <./figures/figure3.png>]
+<figures/figure4.png, id=28, 727.21687pt x 546.54187pt>
 File: figures/figure4.png Graphic file (type png)
 <use figures/figure4.png>
 Package pdftex.def Info: figures/figure4.png  used on input line 59.
 (pdftex.def)             Requested size: 230.02881pt x 172.8788pt.
- [6 <./figures/figure3.png>] [7 <./figures/figure4.png>]
+ [6 <./figures/figure4.png>] [7]
 <figures/figure5.png, id=37, 357.58594pt x 131.74219pt>
 File: figures/figure5.png Graphic file (type png)
 <use figures/figure5.png>
 Package pdftex.def Info: figures/figure5.png  used on input line 88.
 (pdftex.def)             Requested size: 295.21936pt x 108.76501pt.
- [8 <./figures/figure5.png>]
+
 Underfull \hbox (badness 2080) in paragraph at lines 98--99
 []\T1/LibertinusSerif-TLF/m/n/10.95 Unlike atomic classes such as \T1/Libertinu
 sMono-TLF/m/n/10.95 AtomicInteger \T1/LibertinusSerif-TLF/m/n/10.95 or \T1/Libe
 rtinusMono-TLF/m/n/10.95 AtomicReference\T1/LibertinusSerif-TLF/m/n/10.95 , a
  []
 
-<figures/figure6.png, id=42, 504.38437pt x 249.93375pt>
+<figures/figure6.png, id=38, 504.38437pt x 249.93375pt>
 File: figures/figure6.png Graphic file (type png)
 <use figures/figure6.png>
 Package pdftex.def Info: figures/figure6.png  used on input line 100.
 (pdftex.def)             Requested size: 295.20604pt x 146.2812pt.
+[8 <./figures/figure5.png>]
 <figures/figure7.png, id=43, 386.94562pt x 134.00063pt>
 File: figures/figure7.png Graphic file (type png)
 <use figures/figure7.png>
 Package pdftex.def Info: figures/figure7.png  used on input line 102.
 (pdftex.def)             Requested size: 295.20354pt x 102.23pt.
-[9 <./figures/figure6.png>]
-<figures/figure8.png, id=48, 313.17pt x 106.14656pt>
+<figures/figure8.png, id=44, 313.17pt x 106.14656pt>
 File: figures/figure8.png Graphic file (type png)
 <use figures/figure8.png>
 Package pdftex.def Info: figures/figure8.png  used on input line 113.
 (pdftex.def)             Requested size: 295.2113pt x 100.0596pt.
- [10 <./figures/figure7.png> <./figures/figure8.png>]
-<figures/figure9.png, id=54, 259.7203pt x 96.36pt>
+ [9 <./figures/figure6.png> <./figures/figure7.png>]
+<figures/figure9.png, id=50, 259.7203pt x 96.36pt>
 File: figures/figure9.png Graphic file (type png)
 <use figures/figure9.png>
 Package pdftex.def Info: figures/figure9.png  used on input line 117.
 (pdftex.def)             Requested size: 295.20047pt x 109.52362pt.
- [11 <./figures/figure9.png>] [12]) (./sections/implementation.tex [13]
-<figures/figure10.png, id=66, 432.11438pt x 389.20406pt>
+[10 <./figures/figure8.png> <./figures/figure9.png>]
+<figures/figure10.png, id=56, 293.59688pt x 149.8097pt>
 File: figures/figure10.png Graphic file (type png)
 <use figures/figure10.png>
-Package pdftex.def Info: figures/figure10.png  used on input line 19.
+Package pdftex.def Info: figures/figure10.png  used on input line 131.
+(pdftex.def)             Requested size: 295.20444pt x 150.62994pt.
+<figures/figure11.png, id=57, 277.035pt x 97.11281pt>
+File: figures/figure11.png Graphic file (type png)
+<use figures/figure11.png>
+Package pdftex.def Info: figures/figure11.png  used on input line 139.
+(pdftex.def)             Requested size: 295.20285pt x 103.48141pt.
+ [11 <./figures/figure10.png> <./figures/figure11.png>]
+<figures/figure12.png, id=63, 566.115pt x 226.59656pt>
+File: figures/figure12.png Graphic file (type png)
+<use figures/figure12.png>
+Package pdftex.def Info: figures/figure12.png  used on input line 147.
+(pdftex.def)             Requested size: 295.21075pt x 118.16281pt.
+<figures/figure13.png, id=64, 259.7203pt x 96.36pt>
+File: figures/figure13.png Graphic file (type png)
+<use figures/figure13.png>
+Package pdftex.def Info: figures/figure13.png  used on input line 157.
+(pdftex.def)             Requested size: 295.20047pt x 109.52362pt.
+ [12 <./figures/figure12.png> <./figures/figure13.png>]
+<figures/figure14.png, id=70, 276.28218pt x 79.04532pt>
+File: figures/figure14.png Graphic file (type png)
+<use figures/figure14.png>
+Package pdftex.def Info: figures/figure14.png  used on input line 171.
+(pdftex.def)             Requested size: 295.20164pt x 84.45822pt.
+) (./sections/implementation.tex [13 <./figures/figure14.png>] [14]
+<figures/figure15.png, id=79, 432.11438pt x 389.20406pt>
+File: figures/figure15.png Graphic file (type png)
+<use figures/figure15.png>
+Package pdftex.def Info: figures/figure15.png  used on input line 19.
 (pdftex.def)             Requested size: 191.94412pt x 172.88347pt.
 LaTeX Font Info:    Font shape `T1/LibertinusMono-TLF/m/n' will be
 (Font)              scaled to size 8.50006pt on input line 19.
 
-[14]
 Underfull \hbox (badness 1484) in paragraph at lines 23--24
 []\T1/LibertinusSerif-TLF/m/n/10.95 In \T1/LibertinusMono-TLF/m/n/10.95 poll\T1
 /LibertinusSerif-TLF/m/n/10.95 , the method re-peat-edly reads \T1/LibertinusMo
@@ -349,12 +367,12 @@ no-TLF/m/n/10.95 head\T1/LibertinusSerif-TLF/m/n/10.95 , \T1/LibertinusMono-TLF
 /n/10.95 head.next\T1/LibertinusSerif-TLF/m/n/10.95 . If
  []
 
-<figures/figure11.png, id=70, 402.75468pt x 474.27188pt>
-File: figures/figure11.png Graphic file (type png)
-<use figures/figure11.png>
-Package pdftex.def Info: figures/figure11.png  used on input line 25.
+<figures/figure16.png, id=80, 402.75468pt x 474.27188pt>
+File: figures/figure16.png Graphic file (type png)
+<use figures/figure16.png>
+Package pdftex.def Info: figures/figure16.png  used on input line 25.
 (pdftex.def)             Requested size: 146.81064pt x 172.87984pt.
-[15 <./figures/figure10.png> <./figures/figure11.png>]
+[15 <./figures/figure15.png> <./figures/figure16.png>]
 LaTeX Font Info:    Trying to load font information for TS1+LibertinusSerif-TLF
  on input line 32.
 
@@ -366,17 +384,18 @@ LaTeX Font Info:    Font shape `TS1/LibertinusSerif-TLF/m/n' will be
 (Font)              scaled to size 10.95pt on input line 32.
 
 [16] [17]
-<figures/figure12.png, id=83, 313.17pt x 106.14656pt>
-File: figures/figure12.png Graphic file (type png)
-<use figures/figure12.png>
-Package pdftex.def Info: figures/figure12.png  used on input line 67.
-(pdftex.def)             Requested size: 295.2113pt x 100.0596pt.
-<figures/figure13.png, id=84, 259.7203pt x 96.36pt>
-File: figures/figure13.png Graphic file (type png)
-<use figures/figure13.png>
-Package pdftex.def Info: figures/figure13.png  used on input line 75.
-(pdftex.def)             Requested size: 295.20047pt x 109.52362pt.
- [18 <./figures/figure12.png>]
+<figures/figure17.png, id=93, 496.85625pt x 351.56343pt>
+File: figures/figure17.png Graphic file (type png)
+<use figures/figure17.png>
+Package pdftex.def Info: figures/figure17.png  used on input line 67.
+(pdftex.def)             Requested size: 244.31839pt x 172.87376pt.
+ [18 <./figures/figure17.png>]
+<figures/figure18.png, id=98, 493.845pt x 439.6425pt>
+File: figures/figure18.png Graphic file (type png)
+<use figures/figure18.png>
+Package pdftex.def Info: figures/figure18.png  used on input line 75.
+(pdftex.def)             Requested size: 194.18875pt x 172.87535pt.
+
 Underfull \hbox (badness 2512) in paragraph at lines 81--82
 []\T1/LibertinusSerif-TLF/m/n/10.95 The meth-ods \T1/LibertinusMono-TLF/m/n/10.
 95 peek\T1/LibertinusSerif-TLF/m/n/10.95 , \T1/LibertinusMono-TLF/m/n/10.95 con
@@ -392,7 +411,7 @@ Underfull \hbox (badness 1024) in paragraph at lines 81--82
 also im-ple-mented, so the cus-tom queue ex-poses the same API
  []
 
-) (./sections/evaluation.tex [19 <./figures/figure13.png>])
+) (./sections/evaluation.tex [19 <./figures/figure18.png>])
 (./sections/conclusion.tex) (./sections/references.tex
 LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/m/it' will be
 (Font)              scaled to size 10.95pt on input line 5.
@@ -411,13 +430,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 33--36
 
 ) [20] (./report.aux) ) 
 Here is how much of TeX's memory you used:
- 2894 strings out of 483183
- 46764 string characters out of 5966292
+ 2924 strings out of 483183
+ 47379 string characters out of 5966292
  275817 words of memory out of 5000000
- 17837 multiletter control sequences out of 15000+600000
+ 17862 multiletter control sequences out of 15000+600000
  594258 words of font info for 60 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 30i,11n,45p,805b,320s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 30i,11n,45p,786b,320s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/home/aggelos/texmf/fonts/enc/dvips/libertinus-type1/lb
 n1_sncvby.enc}{/home/aggelos/texmf/fonts/enc/dvips/libertinus-type1/lbn1_rlktsf
 .enc}{/home/aggelos/texmf/fonts/enc/dvips/libertinus-type1/lbn1_or3pzs.enc}{/ho
@@ -427,10 +446,10 @@ onts/type1/public/libertinus-type1/LibertinusMono-Regular.pfb></home/aggelos/te
 xmf/fonts/type1/public/libertinus-type1/LibertinusSerif-Bold.pfb></home/aggelos
 /texmf/fonts/type1/public/libertinus-type1/LibertinusSerif-Italic.pfb></home/ag
 gelos/texmf/fonts/type1/public/libertinus-type1/LibertinusSerif-Regular.pfb>
-Output written on report.pdf (20 pages, 909893 bytes).
+Output written on report.pdf (20 pages, 1136086 bytes).
 PDF statistics:
- 119 PDF objects out of 1000 (max. 8388607)
+ 129 PDF objects out of 1000 (max. 8388607)
  66 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 66 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 91 words of extra memory for PDF output out of 10000 (max. 10000000)
 

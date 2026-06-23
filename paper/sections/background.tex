@@ -1,7 +1,7 @@
 \section{Background}
 Concurrency refers to the ability of a system to manage multiple tasks whose executions overlap in time. In multithreaded applications, multiple threads may access and modify shared data concurrently, introducing challenges related to correctness, visibility, atomicity, ordering, and synchronization. As a result, concurrent programming requires mechanisms that ensure predictable behavior when shared state is accessed by multiple execution contexts.
 
-This section introduces the main concepts needed to discuss concurrent programming in Java. Visibility and atomicity are basic concepts that describe how shared state can be observed and updated by multiple threads. Thread safety is discussed in terms of correctness, since a thread-safe class or data structure must preserve its expected behavior under concurrent access. The section also gives a general overview of the Java Memory Model (JMM), synchronization mechanisms such as \texttt{volatile}, atomic operations, compare-and-swap (CAS), and VarHandles, and the background needed for the later analysis of the JDK concurrent queue and deque implementations.
+This section introduces the main concepts needed to discuss concurrent programming in Java. Visibility and atomicity are basic concepts that describe how shared state can be observed and updated by multiple threads. Thread safety is discussed in terms of correctness, since a thread-safe class or data structure must preserve its expected behavior under concurrent access. The section also gives a general overview of the Java Memory Model (JMM), synchronization mechanisms such as \texttt{volatile}, atomic operations, compare-and-swap (CAS), and VarHandles, and the background needed for the later analysis of the JDK concurrent queue implementations.
 
 \subsection{Visibility}
 
@@ -128,7 +128,7 @@ The Linked Concurrent Ring Queue (LCRQ) was proposed as an evolution of the Mich
 
 At a high level, an LCRQ can be viewed as a Michael-Scott Queue where each node of the linked list is replaced by a Concurrent Ring Queue (CRQ). Instead of storing individual elements inside linked-list nodes, each CRQ stores many elements inside a circular array. \cite{lcrq}
 
-\textbf{Here put a figure: conceptual relationship between the Michael-Scott Queue and the LCRQ.}
+\paperfigure{figure10.png}{Conceptual relationship between the Michael-Scott Queue and the LCRQ.}
 
 This design significantly reduces contention because threads are distributed across many slots of a ring buffer rather than repeatedly updating the same shared pointers. \cite{lcrq}
 
@@ -136,7 +136,7 @@ A key component of the algorithm is the Fetch-And-Add (FAA) operation. Unlike CA
 
 For example, assume the \texttt{tail} counter initially contains \texttt{tail = 5} and three threads execute \texttt{index = FAA(tail, 1)}. The result is that Thread A receives position \texttt{5}, Thread B receives position \texttt{6}, Thread C receives position \texttt{7}, and \texttt{tail} becomes \texttt{8}. \cite{lcrq}
 
-\textbf{Here put a figure: ticket allocation using Fetch-And-Add.}
+\paperfigure{figure11.png}{Ticket allocation using Fetch-And-Add.}
 
 A useful way to think about FAA is as taking a queue ticket. Every thread receives a unique number and can immediately proceed to its assigned position without competing with the others. \cite{lcrq}
 
@@ -144,7 +144,7 @@ This is one of the main reasons why LCRQ scales better under contention. In a tr
 
 Each CRQ consists of a circular array of slots. Each slot stores metadata in addition to the actual value. Most importantly, every slot maintains an index (\texttt{idx}) which identifies the logical position associated with that slot. \cite{lcrq}
 
-\textbf{Here put a figure: ring buffer slots used by a Concurrent Ring Queue.}
+\paperfigure{figure12.png}{Ring buffer slots used by a Concurrent Ring Queue.}
 
 This is necessary because the ring buffer is reused continuously. For example, if the ring contains eight positions, then indices \texttt{2} and \texttt{10} both map to the same physical slot, because \texttt{2 \% 8 = 2} and \texttt{10 \% 8 = 2}. \cite{lcrq}
 
@@ -154,7 +154,7 @@ To insert an element, a thread first reserves a position using \texttt{ticket = 
 
 For example, if \texttt{tail = 0}, then Thread A receives ticket \texttt{0} and slot \texttt{0}, Thread B receives ticket \texttt{1} and slot \texttt{1}, Thread C receives ticket \texttt{2} and slot \texttt{2}, and Thread D receives ticket \texttt{3} and slot \texttt{3}. \cite{lcrq}
 
-\textbf{Here put a figure: threads distributed across different ring positions.}
+\paperfigure{figure13.png}{Threads distributed across different ring positions.}
 
 Unlike the Michael-Scott Queue, where multiple threads may attempt to update the same \texttt{tail.next} pointer, the LCRQ spreads concurrent operations across many slots. This dramatically reduces contention because threads are typically working on different positions of the ring. \cite{lcrq}
 
@@ -168,7 +168,7 @@ Eventually a ring may become full or reach a state where further insertions are 
 
 The new ring is then attached using the same linked-list approach employed by the Michael-Scott Queue. \cite{lcrq}
 
-\textbf{Here put a figure: linking multiple Concurrent Ring Queues.}
+\paperfigure{figure14.png}{Linking multiple Concurrent Ring Queues.}
 
 This is the reason for the name Linked Concurrent Ring Queue. The algorithm combines two ideas: the linked structure of the Michael-Scott Queue and the high-throughput ring-buffer design of a Concurrent Ring Queue. \cite{lcrq}
 

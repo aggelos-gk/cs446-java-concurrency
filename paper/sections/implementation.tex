@@ -16,13 +16,13 @@ The most important methods are \texttt{offer} and \texttt{poll}. This is also wh
 
 In \texttt{offer}, the method first rejects \texttt{null} values and creates a new node for the element. Then it repeatedly reads the current \texttt{tail} and the \texttt{next} field of that tail node. If \texttt{next} is \texttt{null}, the tail really looks like the last node, so the method tries to link the new node using \texttt{NEXT.compareAndSet}. If this CAS succeeds, the element has been inserted into the linked list. After that, the method also tries to move the \texttt{tail} pointer forward with \texttt{TAIL.compareAndSet}. This second CAS is a helping step, so even if it fails, the insertion has already happened.
 
-\paperfigure{figure10.png}{Offer operation in the custom \texttt{MSQueue} implementation.}
+\paperfigure{figure15.png}{Offer operation in the custom \texttt{MSQueue} implementation.}
 
 If \texttt{offer} sees that \texttt{tail.next} is not \texttt{null}, then another thread has already inserted a node but the \texttt{tail} pointer is behind. In that case, the method helps by trying to advance \texttt{tail} to \texttt{next}. This is an important part of the Michael-Scott style: threads do not only wait for their own operation, they can also help complete the state left by another thread. When a CAS fails, the loop continues and \texttt{Thread.onSpinWait()} is used before retrying.
 
 In \texttt{poll}, the method repeatedly reads \texttt{head}, \texttt{tail}, and \texttt{head.next}. If \texttt{head.next} is \texttt{null}, then there is no real node after the dummy node and the queue is empty, so the method returns \texttt{null}. If \texttt{head} and \texttt{tail} point to the same node but \texttt{next} is not \texttt{null}, then the \texttt{tail} pointer is behind and the method helps move it forward.
 
-\paperfigure{figure11.png}{Poll operation in the custom \texttt{MSQueue} implementation.}
+\paperfigure{figure16.png}{Poll operation in the custom \texttt{MSQueue} implementation.}
 
 When the queue contains an element, \texttt{poll} reads the value from \texttt{next.item} and then tries to move \texttt{head} from the old dummy node to \texttt{next} with a CAS on the \texttt{HEAD} VarHandle. If this CAS succeeds, the value is returned. The old dummy node is then self-linked with \texttt{h.next = h}. In this implementation this is used as a simple cleanup step, similar to the idea of helping garbage collection by making old nodes easier to detach from the active queue path.
 
@@ -64,7 +64,7 @@ The code also uses \texttt{getAcquire} in many places, but for a different reaso
 
 In \texttt{offer}, the outer queue first reads the current \texttt{tailSeg} through the \texttt{TAIL\_SEG} handle. It then calls \texttt{offer} on that segment. If the segment accepts the element, the method returns \texttt{true}. If the segment is full or closed, the outer queue checks \texttt{SEG\_NEXT}. If there is no next segment, it creates a new \texttt{Segment} and tries to attach it using \texttt{SEG\_NEXT.compareAndSet}. If another thread already attached a segment, the method helps by moving \texttt{tailSeg} forward.
 
-\paperfigure{figure12.png}{Offer operation in the custom \texttt{LinkedConcurrentRingQueue} implementation.}
+\paperfigure{figure17.png}{Offer operation in the custom \texttt{LinkedConcurrentRingQueue} implementation.}
 
 Inside a segment, \texttt{offer} first checks whether the segment is closed. Then it reserves a position by calling \texttt{SEG\_TAIL.getAndAdd}. If the returned ticket is greater than or equal to the segment capacity, the segment is closed and the insert fails, so the outer queue can move to another segment. Otherwise, the ticket is used as the array index. The element is inserted with \texttt{ARRAY.compareAndSet(items, index, EMPTY, e)}. This means that the thread only writes the element if the slot is still marked as \texttt{EMPTY}.
 
@@ -72,7 +72,7 @@ The original LCRQ paper describes a double-word compare-and-swap, usually called
 
 In \texttt{poll}, the outer queue reads the current \texttt{headSeg} and tries to remove an element from that segment. If the segment returns a real value, \texttt{poll} returns it to the caller. If the segment reports \texttt{SEGMENT\_EMPTY}, the outer queue checks whether there is a next segment. If there is no next segment, the whole queue is empty at that moment and \texttt{poll} returns \texttt{null}. If a next segment exists, the method tries to advance \texttt{headSeg} with \texttt{HEAD\_SEG.compareAndSet}.
 
-\paperfigure{figure13.png}{Poll operation in the custom \texttt{LinkedConcurrentRingQueue} implementation.}
+\paperfigure{figure18.png}{Poll operation in the custom \texttt{LinkedConcurrentRingQueue} implementation.}
 
 Inside a segment, \texttt{poll} first reads the segment \texttt{head} and \texttt{tail}. If \texttt{head} is already greater than or equal to \texttt{tail}, then there is no reserved value to read from that segment. Otherwise, the method reserves a dequeue position with \texttt{SEG\_HEAD.getAndAdd}. This is the same ticket idea as enqueue, but applied to removals. The selected slot is then updated with \texttt{ARRAY.getAndSet(items, index, SKIPPED)}. If the slot contained a real element, that element is returned. If it contained \texttt{EMPTY} or \texttt{SKIPPED}, the method knows that the slot did not produce a value and continues or reports that the segment is empty.
 
