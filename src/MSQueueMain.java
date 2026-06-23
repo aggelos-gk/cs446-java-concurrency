@@ -5,10 +5,10 @@ public final class MSQueueMain {
     }
 
     public static void main(String[] args) {
-        MSQueue<Integer> demoQueue = new MSQueue<>();
+        MSLinkedConcurrentQueue<Integer> demoQueue = new MSLinkedConcurrentQueue<>();
         System.out.print(QueueDemoSupport.functionalOutput(demoQueue));
 
-        long nanos = QueueDemoSupport.timeOfferPollNanos(new MSQueue<>(), OPERATIONS);
+        long nanos = QueueDemoSupport.timeOfferPollNanos(new MSLinkedConcurrentQueue<>(), OPERATIONS);
         System.out.printf("msqueue time for %,d sequential offer+poll pairs: %.3f ms%n",
                 OPERATIONS, QueueDemoSupport.millis(nanos));
     }

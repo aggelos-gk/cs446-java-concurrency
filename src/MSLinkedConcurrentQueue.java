@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-public final class MSQueue<E> extends AbstractQueue<E> {
+public final class MSLinkedConcurrentQueue<E> extends AbstractQueue<E> {
     private static final VarHandle HEAD;
     private static final VarHandle TAIL;
     private static final VarHandle NEXT;
@@ -13,8 +13,8 @@ public final class MSQueue<E> extends AbstractQueue<E> {
     static {
         try {
             MethodHandles.Lookup l = MethodHandles.lookup();
-            HEAD = l.findVarHandle(MSQueue.class, "head", Node.class);
-            TAIL = l.findVarHandle(MSQueue.class, "tail", Node.class);
+            HEAD = l.findVarHandle(MSLinkedConcurrentQueue.class, "head", Node.class);
+            TAIL = l.findVarHandle(MSLinkedConcurrentQueue.class, "tail", Node.class);
             NEXT = l.findVarHandle(Node.class, "next", Node.class);
         } catch (ReflectiveOperationException e) {
             throw new ExceptionInInitializerError(e);
@@ -24,7 +24,7 @@ public final class MSQueue<E> extends AbstractQueue<E> {
     private volatile Node<E> head;
     private volatile Node<E> tail;
 
-    public MSQueue() {
+    public MSLinkedConcurrentQueue() {
         Node<E> dummy = new Node<>(null);
         head = dummy;
         tail = dummy;

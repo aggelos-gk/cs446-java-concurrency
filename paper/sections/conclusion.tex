@@ -1,4 +1,6 @@
 \section{Conclusion}
-This section should summarize the tradeoffs between lock-based and lock-free queue implementations. It should connect the results back to the design goals of correctness, throughput, and scalability.
+From the first results, the LCRQ-inspired queue looks like the fastest option, especially once contention starts going up. A reasonable explanation is that it spreads the work across segment slots instead of forcing as many threads to fight on the same linked pointers, so it likely suffers from fewer failed CAS retries than the other linked-node style queues.
 
-The final discussion should also mention limitations of the evaluation and possible future improvements.
+The custom \texttt{MSConcurrentLinkedQueue} is generally slower than the official JDK \texttt{ConcurrentLinkedQueue}, which is not very surprising. The official implementation has more low-level tuning in \texttt{offer()} and \texttt{poll()} and in general it is a much more optimized production implementation. At the same time, the custom MS queue can look better in the single-thread case, probably because the algorithm is simpler and has less overhead when there is no contention.
+
+So the overall picture is fairly clear: the LCRQ-style segmented approach looks stronger under concurrent load, while the official JDK queue is still the better tuned version of the Michael-Scott style design. The custom MS implementation is still useful because it shows the core idea more directly and makes the behavior of this kind of lock-free queue easier to study.

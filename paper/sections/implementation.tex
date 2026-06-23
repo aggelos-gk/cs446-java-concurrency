@@ -6,7 +6,7 @@ The goal is not only to write the queues, but also to compare them. For this rea
 
 
 \subsection{Custom MSConcurrentLinkedQueue implementation}
-The first custom queue implementation is the Michael-Scott-inspired queue. In the source code this class is named \texttt{MSQueue}. The reason for this implementation is to build a simple lock-free queue with the same general idea used by \texttt{ConcurrentLinkedQueue}: a linked list of nodes, a \texttt{head} pointer, a \texttt{tail} pointer, and atomic updates instead of locks. The official \texttt{ConcurrentLinkedQueue} is a good comparison point because it is an unbounded, thread-safe, non-blocking FIFO queue from the JDK and its implementation is based on the Michael and Scott queue design. \cite{clq-docs}
+The first custom queue implementation is the Michael-Scott-inspired queue. In the local source code this class is named \texttt{MSLinkedConcurrentQueue}. The reason for this implementation is to build a simple lock-free queue with the same general idea used by \texttt{ConcurrentLinkedQueue}: a linked list of nodes, a \texttt{head} pointer, a \texttt{tail} pointer, and atomic updates instead of locks. The official \texttt{ConcurrentLinkedQueue} is a good comparison point because it is an unbounded, thread-safe, non-blocking FIFO queue from the JDK and its implementation is based on the Michael and Scott queue design. \cite{clq-docs}
 
 The queue stores its elements in linked \texttt{Node} objects. Each node has a final \texttt{item} field and a \texttt{volatile} \texttt{next} field. The queue itself also has \texttt{volatile} \texttt{head} and \texttt{tail} references. The constructor creates one dummy node and makes both \texttt{head} and \texttt{tail} point to it. This dummy node is useful because the first real value is always stored in \texttt{head.next}, so the code does not need a special case for the first insertion.
 
@@ -16,13 +16,13 @@ The most important methods are \texttt{offer} and \texttt{poll}. This is also wh
 
 In \texttt{offer}, the method first rejects \texttt{null} values and creates a new node for the element. Then it repeatedly reads the current \texttt{tail} and the \texttt{next} field of that tail node. If \texttt{next} is \texttt{null}, the tail really looks like the last node, so the method tries to link the new node using \texttt{NEXT.compareAndSet}. If this CAS succeeds, the element has been inserted into the linked list. After that, the method also tries to move the \texttt{tail} pointer forward with \texttt{TAIL.compareAndSet}. This second CAS is a helping step, so even if it fails, the insertion has already happened.
 
-\paperfigure{figure15.png}{Offer operation in the custom \texttt{MSQueue} implementation.}
+\paperfigure{figure15.png}{Offer operation in the custom \texttt{MSLinkedConcurrentQueue} implementation.}
 
 If \texttt{offer} sees that \texttt{tail.next} is not \texttt{null}, then another thread has already inserted a node but the \texttt{tail} pointer is behind. In that case, the method helps by trying to advance \texttt{tail} to \texttt{next}. This is an important part of the Michael-Scott style: threads do not only wait for their own operation, they can also help complete the state left by another thread. When a CAS fails, the loop continues and \texttt{Thread.onSpinWait()} is used before retrying.
 
 In \texttt{poll}, the method repeatedly reads \texttt{head}, \texttt{tail}, and \texttt{head.next}. If \texttt{head.next} is \texttt{null}, then there is no real node after the dummy node and the queue is empty, so the method returns \texttt{null}. If \texttt{head} and \texttt{tail} point to the same node but \texttt{next} is not \texttt{null}, then the \texttt{tail} pointer is behind and the method helps move it forward.
 
-\paperfigure{figure16.png}{Poll operation in the custom \texttt{MSQueue} implementation.}
+\paperfigure{figure16.png}{Poll operation in the custom \texttt{MSLinkedConcurrentQueue} implementation.}
 
 When the queue contains an element, \texttt{poll} reads the value from \texttt{next.item} and then tries to move \texttt{head} from the old dummy node to \texttt{next} with a CAS on the \texttt{HEAD} VarHandle. If this CAS succeeds, the value is returned. The old dummy node is then self-linked with \texttt{h.next = h}. In this implementation this is used as a simple cleanup step, similar to the idea of helping garbage collection by making old nodes easier to detach from the active queue path.
 

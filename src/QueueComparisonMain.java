@@ -14,7 +14,7 @@ public final class QueueComparisonMain {
     public static void main(String[] args) {
         QueueCase[] cases = {
                 new QueueCase("lcrq", LinkedConcurrentRingQueue::new),
-                new QueueCase("msqueue", MSQueue::new),
+                new QueueCase("msqueue", MSLinkedConcurrentQueue::new),
                 new QueueCase("official", ConcurrentLinkedQueue::new)
         };
 

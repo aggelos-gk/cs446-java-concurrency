@@ -6,28 +6,14 @@ I also wanted this check to be done in a setup that is as close as possible to r
 This section should define how the queue implementations will be evaluated. The evaluation should include throughput, latency, scalability across thread counts, and behavior under different producer-consumer ratios.
 
 \subsection{Experimental Setup}
-The experiments were run on my laptop, a Lenovo ThinkBook 15 G2 ARE. The machine has an AMD Ryzen 5 4500U with Radeon Graphics and 8 GB of DDR4 RAM. The CPU has 384 KB of L1 cache, 3 MB of L2 cache, and 8 MB of L3 cache.
+The experiments were run on my laptop, a Lenovo 20VG system with an AMD Ryzen 5 4500U with Radeon Graphics. The machine has 8 GB of DDR4 system memory, 384 KB of L1 cache, 3 MB of L2 cache, and 8 MB of L3 cache. The queue implementations were tested inside the local OpenJDK 21.0.12-internal build where the two custom queues were installed under \texttt{java.util.concurrent}.
 
-During the experiments, the laptop was connected to power, so it was not running on battery. I also disabled CPU boost / turbo boost in order to make the results more stable and avoid frequency changes during the benchmarks. This was checked using sudo turbostat, where the output showed:
-
-cpufreq boost: 0
-
-This means that boost was disabled while the measurements were taken.
+During the experiments, the laptop was connected to power, so it was not running on battery. I also kept turbo boost disabled in order to reduce frequency changes during the measurements. This was checked with \texttt{sudo turbostat} before the runs.
 \subsection{Metrics}
-For the performance measurements, I used JMH, the Java Microbenchmark Harness. JMH is a benchmarking framework for Java that helps run more reliable microbenchmarks by handling things like warm-up iterations, measurement iterations, JVM optimizations, and repeated runs.
+For the performance part, I used both some simple custom timing tests and JMH. The custom timing code is under \texttt{test/benchmarks/custom}. These tests are useful because they are easy to read and they show clearly what is being measured. In particular, I measured sequential \texttt{offer}+\texttt{poll} runs with 1,000,000 operations, and I also measured threaded \texttt{offer}/\texttt{poll} runs with 1, 4, 8, 16, and 32 threads. In the threaded tests, the code also checks things like checksum, null polls, and remaining elements, so the timing is not separated from basic correctness.
 
-I ran two benchmark tests. The first one was a round-trip queue benchmark, where each operation performs an offer() followed by a poll() on the same queue. This checks the basic cost of inserting and removing an item from the queue.
+I also used JMH, the Java Microbenchmark Harness. JMH is the standard Java microbenchmark framework and it helps avoid some common benchmarking mistakes by doing warm-up, controlled measurement iterations, and repeated execution under the JVM. Here it was used mainly to measure the round-trip queue cost, where each benchmark operation does an \texttt{offer()} followed by a \texttt{poll()}, and to compare the same three implementations in a more controlled setup.
 
-The second test was a producer-consumer benchmark. In this benchmark, some threads only produce items using offer(), while other threads consume items using poll(). I tested different thread configurations: 1 producer / 1 consumer, 2 producers / 2 consumers, and 4 producers / 4 consumers.
+The three queues compared in these measurements are the official JDK \texttt{ConcurrentLinkedQueue}, my custom \texttt{MSConcurrentLinkedQueue}, and \texttt{LinkedConcurrentRingQueue}. For the final comparison, I report execution times in milliseconds (ms), so lower values mean better performance.
 
-The benchmarks compared three queue implementations:
-
-Java’s ConcurrentLinkedQueue,
-my custom MSConcurrentLinkedQueue and
-LinkedConcurrentRingQueue
-
-The JMH configuration used 3 warm-up iterations and 5 measurement iterations. Each iteration lasted 1 second, and the benchmark was forked once. The benchmark mode was throughput, so JMH measured how many operations per second each queue implementation could complete.
-
-For the final results, I report the execution times in milliseconds (ms), so lower values mean better performance.
-
-\paperfigure{figure19.png}{throughput evaluation}
+\paperfigure{figure20.png}{Initial timing results in milliseconds for the three queue implementations.}

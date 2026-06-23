@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.20)  24 JUN 2026 00:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.5.20)  24 JUN 2026 00:20
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -240,12 +240,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 81.
 
-(./sections/abstract.tex
-LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/m/n' will be
-(Font)              scaled to size 10.0pt on input line 1.
-LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/b/n' will be
-(Font)              scaled to size 10.0pt on input line 1.
-) (./sections/introduction.tex
+(./sections/introduction.tex
 LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/b/n' will be
 (Font)              scaled to size 14.4pt on input line 1.
 LaTeX Font Info:    Trying to load font information for T1+LibertinusMono-TLF o
@@ -275,15 +270,19 @@ File: figures/figure1.png Graphic file (type png)
 <use figures/figure1.png>
 Package pdftex.def Info: figures/figure1.png  used on input line 14.
 (pdftex.def)             Requested size: 220.69887pt x 172.88077pt.
- [3 <./figures/figure1.png>]
-<figures/figure2.png, id=18, 358.33875pt x 134.00063pt>
+LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/m/n' will be
+(Font)              scaled to size 10.0pt on input line 14.
+LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/b/n' will be
+(Font)              scaled to size 10.0pt on input line 14.
+<figures/figure2.png, id=14, 358.33875pt x 134.00063pt>
 File: figures/figure2.png Graphic file (type png)
 <use figures/figure2.png>
 Package pdftex.def Info: figures/figure2.png  used on input line 27.
 (pdftex.def)             Requested size: 295.22302pt x 110.3985pt.
- [4 <./figures/figure2.png>]
+ [3 <./figures/figure1.png>]
 LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/b/n' will be
 (Font)              scaled to size 10.95pt on input line 41.
+ [4 <./figures/figure2.png>]
 <figures/figure3.png, id=23, 359.09157pt x 195.73125pt>
 File: figures/figure3.png Graphic file (type png)
 <use figures/figure3.png>
@@ -295,13 +294,13 @@ File: figures/figure4.png Graphic file (type png)
 <use figures/figure4.png>
 Package pdftex.def Info: figures/figure4.png  used on input line 59.
 (pdftex.def)             Requested size: 230.02881pt x 172.8788pt.
- [6 <./figures/figure4.png>] [7]
-<figures/figure5.png, id=37, 357.58594pt x 131.74219pt>
+ [6 <./figures/figure4.png>]
+<figures/figure5.png, id=33, 357.58594pt x 131.74219pt>
 File: figures/figure5.png Graphic file (type png)
 <use figures/figure5.png>
 Package pdftex.def Info: figures/figure5.png  used on input line 88.
 (pdftex.def)             Requested size: 295.21936pt x 108.76501pt.
-
+ [7]
 Underfull \hbox (badness 2080) in paragraph at lines 98--99
 []\T1/LibertinusSerif-TLF/m/n/10.95 Unlike atomic classes such as \T1/Libertinu
 sMono-TLF/m/n/10.95 AtomicInteger \T1/LibertinusSerif-TLF/m/n/10.95 or \T1/Libe
@@ -421,16 +420,28 @@ also im-ple-mented, so the cus-tom queue ex-poses the same API
  []
 
 ) (./sections/evaluation.tex [19 <./figures/figure18.png>] [20]
-<figures/figure19.png, id=107, 1044.90375pt x 675.52374pt>
-File: figures/figure19.png Graphic file (type png)
-<use figures/figure19.png>
-Package pdftex.def Info: figures/figure19.png  used on input line 33.
-(pdftex.def)             Requested size: 267.3956pt x 172.86958pt.
-)
-(./sections/conclusion.tex) (./sections/references.tex
+Underfull \hbox (badness 2529) in paragraph at lines 17--18
+[]\T1/LibertinusSerif-TLF/m/n/10.95 The three queues com-pared in these mea-sur
+e-ments are the of-fi-cial JDK
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 17--18
+\T1/LibertinusMono-TLF/m/n/10.95 ConcurrentLinkedQueue\T1/LibertinusSerif-TLF/m
+/n/10.95 , my cus-tom \T1/LibertinusMono-TLF/m/n/10.95 MSConcurrentLinkedQueue\
+T1/LibertinusSerif-TLF/m/n/10.95 , and
+ []
+
+<figures/figure20.png, id=107, 1082.0425pt x 582.175pt>
+File: figures/figure20.png Graphic file (type png)
+<use figures/figure20.png>
+Package pdftex.def Info: figures/figure20.png  used on input line 19.
+(pdftex.def)             Requested size: 295.19333pt x 158.82387pt.
+) (./sections/conclusion.tex [21 <./figures/figure20.png>])
+(./sections/references.tex
 LaTeX Font Info:    Font shape `T1/LibertinusSerif-TLF/m/it' will be
 (Font)              scaled to size 10.95pt on input line 5.
- [21 <./figures/figure19.png>]
+
 Underfull \hbox (badness 10000) in paragraph at lines 33--36
 []\T1/LibertinusSerif-TLF/m/n/10.95 Oracle. \T1/LibertinusSerif-TLF/m/it/10.95 
 Con-cur-rentLinkedQueue (Java Plat-form SE 8)\T1/LibertinusSerif-TLF/m/n/10.95 
@@ -451,10 +462,10 @@ L3 programming layer <2024-01-22>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 3385 strings out of 476182
- 60790 string characters out of 5795595
+ 3376 strings out of 476182
+ 60539 string characters out of 5795595
  1933975 words of memory out of 5000000
- 25318 multiletter control sequences out of 15000+600000
+ 25311 multiletter control sequences out of 15000+600000
  620000 words of font info for 72 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  65i,12n,68p,1045b,334s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -463,9 +474,9 @@ ar.pfb></home/aggelos/texmf/fonts/type1/public/libertinus-type1/LibertinusSerif
 -Bold.pfb></home/aggelos/texmf/fonts/type1/public/libertinus-type1/LibertinusSe
 rif-Italic.pfb></home/aggelos/texmf/fonts/type1/public/libertinus-type1/Liberti
 nusSerif-Regular.pfb>
-Output written on report.pdf (22 pages, 1513548 bytes).
+Output written on report.pdf (22 pages, 1179924 bytes).
 PDF statistics:
- 142 PDF objects out of 1000 (max. 8388607)
+ 141 PDF objects out of 1000 (max. 8388607)
  70 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  96 words of extra memory for PDF output out of 10000 (max. 10000000)
