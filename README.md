@@ -4,10 +4,16 @@ CS446 course project.
 
 This project is about extending Java's concurrent library with two extra queue implementations and then checking both correctness and performance.
 
+The OpenJDK repo used for the library integration lives here:
+
+- `https://github.com/aggelos-gk/jdk21u`
+
 The two main queues are:
 
 - `MSLinkedConcurrentQueue`: a Michael-Scott-style lock-free linked queue prototype in `src/`
 - `LinkedConcurrentRingQueue`: an LCRQ-inspired segmented queue
+
+The prototype files also exist in this repo under `src/`, but to use them as real `java.util.concurrent` library classes they need to be placed into the OpenJDK tree and the JDK needs to be built.
 
 For the JDK integration, the source files from `src/` that matter need to end up under:
 
@@ -87,8 +93,8 @@ Run the simple custom benchmark programs:
 
 ```bash
 cd /home/aggelos/Git_repos/cs446-java-concurrency
-javac test/benchmarks/custom/*.java
-java -cp test/benchmarks/custom QueueComparisonMain
+javac src/*.java test/benchmarks/custom/*.java
+java -cp src:test/benchmarks/custom QueueComparisonMain
 ```
 
 Build the paper:

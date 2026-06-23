@@ -33,6 +33,8 @@ sourceSets {
         java {
             srcDirs = ['test/benchmarks']
         }
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
     }
 }
 
